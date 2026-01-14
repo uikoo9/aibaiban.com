@@ -1,0 +1,12 @@
+{
+  "name": "@aibaiban/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Whiteboard - Web Frontend",
+  "scripts": {
+    "dev": "echo 'Web dev server - to be configured'",
+    "build": "echo 'Web build - to be configured'",
+    "lint": "echo 'Web lint - to be configured'",
+    "test": "echo 'Web test - to be configured'"
+  }
+}

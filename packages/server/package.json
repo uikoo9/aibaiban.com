@@ -1,0 +1,12 @@
+{
+  "name": "@aibaiban/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Whiteboard - Backend Server",
+  "scripts": {
+    "dev": "echo 'Server dev - to be configured'",
+    "build": "echo 'Server build - to be configured'",
+    "lint": "echo 'Server lint - to be configured'",
+    "test": "echo 'Server test - to be configured'"
+  }
+}

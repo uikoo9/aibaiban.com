@@ -1,0 +1,31 @@
+{
+  "name": "aibaiban",
+  "version": "0.1.0",
+  "description": "AI-powered collaborative whiteboard platform",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules .turbo",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "whiteboard",
+    "ai",
+    "collaboration",
+    "react",
+    "nodejs"
+  ],
+  "author": "Vincent",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "husky": "^9.1.7",
+    "turbo": "^2.7.4"
+  }
+}
