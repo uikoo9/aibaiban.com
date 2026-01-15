@@ -23,6 +23,7 @@
 
 ### 💬 开发会话
 - [2026-01-14 项目初始化](./sessions/2026-01/14-project-init.md)
+- [2026-01-15 产品规划](./sessions/2026-01/15-product-planning.md)
 
 ### ✅ 任务管理
 - [当前 Sprint](./tasks/current-sprint.md)
