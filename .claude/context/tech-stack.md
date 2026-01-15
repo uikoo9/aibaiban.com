@@ -29,6 +29,7 @@
 ### 语言和框架基础
 - **前端**: React
 - **后端**: Node.js
+- **白板框架**: Excalidraw (npm: @excalidraw/excalidraw)
 
 ## 待确定
 
@@ -36,7 +37,11 @@
 - 框架：Next.js / Vite + React
 - 状态管理：待定
 - UI 组件库：待定
-- Canvas 库：待定（白板核心）
+
+### 白板相关
+- ✅ 核心框架：Excalidraw（已确定）
+- 素材库：使用 Excalidraw 官方素材库
+- AI 集成点：onChange 监听、自定义 UI、API 注入
 
 ### 后端
 - 框架：Express / Fastify / NestJS
@@ -64,3 +69,4 @@
 - 2026-01-14: 创建技术栈文档
 - 2026-01-14: 确定使用 pnpm 作为包管理器，Monorepo 架构
 - 2026-01-14: 确定使用 Turborepo 作为构建工具
+- 2026-01-14: 确定使用 Excalidraw 作为白板框架

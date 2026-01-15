@@ -10,6 +10,9 @@
 ### 技术文档
 - [技术选型.md](./技术选型.md) - 技术栈选择的详细分析和对比
 - [TURBOREPO.md](./TURBOREPO.md) - Turborepo 构建工具使用指南
+- [开源白板项目选型.md](./开源白板项目选型.md) - 白板框架对比
+- [白板素材库对比.md](./白板素材库对比.md) - Excalidraw vs tldraw 素材库
+- [Excalidraw集成方案.md](./Excalidraw集成方案.md) - Excalidraw 引入方案分析
 
 ### 开发规范
 - [GIT_COMMIT_GUIDELINES.md](./GIT_COMMIT_GUIDELINES.md) - Git 提交信息规范
