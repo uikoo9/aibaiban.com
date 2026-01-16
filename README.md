@@ -21,12 +21,14 @@ AI白板是一个基于人工智能的在线协作白板工具，致力于提供
 - **包管理器**: pnpm - 为 Monorepo 优化，快速且节省磁盘空间
 - **构建工具**: Turborepo - 增量构建和智能缓存
 - **白板框架**: Excalidraw - 丰富素材库，手绘风格，MIT 协议
-- **前端**: React - 熟悉的组件化开发体验
+- **前端渲染**: CSR (Vite 5.x + React 18.x + TypeScript 5.x)
+- **样式方案**: Tailwind CSS 3.x
+- **组件库**: shadcn/ui - 可定制化的现代 UI 组件
 - **后端**: Node.js - JavaScript 全栈开发
 - **项目架构**: Monorepo - 统一管理前后端代码
 
 ### 规划中
-- 前端框架：Next.js / Vite + React (待定)
+- 状态管理：Zustand (待定)
 - 后端框架：Express / Fastify / NestJS (待定)
 - 数据库方案 (待定)
 - AI 集成方案 (待定)
@@ -49,7 +51,9 @@ aibaiban.com/
 │   │   ├── 001-package-manager-pnpm.md
 │   │   ├── 002-build-tool-turborepo.md
 │   │   ├── 003-git-commit-convention.md
-│   │   └── 004-whiteboard-excalidraw.md
+│   │   ├── 004-whiteboard-excalidraw.md
+│   │   ├── 005-frontend-rendering-csr.md
+│   │   └── 006-ui-framework-tailwind-shadcn.md
 │   ├── sessions/                     # 开发会话记录
 │   │   └── 2026-01/
 │   │       └── 14-project-init.md
@@ -162,8 +166,10 @@ git commit -m "docs: 更新开发文档"
 - [x] 初始化 pnpm Monorepo
 - [x] 安装并配置 Turborepo
 - [x] 确定白板框架 (Excalidraw)
+- [x] 确定前端渲染方案 (CSR - Vite + React)
+- [x] 确定 UI 框架 (Tailwind CSS + shadcn/ui)
 - [x] 创建产品文档结构 (prds/)
-- [ ] 确定前后端框架
+- [ ] 确定后端框架
 - [ ] 搭建项目骨架
 
 ### 产品规划

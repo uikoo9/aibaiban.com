@@ -9,6 +9,7 @@
 
 ### 技术文档
 - [技术选型.md](./技术选型.md) - 技术栈选择的详细分析和对比
+- [前端渲染方案选型.md](./前端渲染方案选型.md) - CSR/SSR/PWA 方案对比与决策
 - [TURBOREPO.md](./TURBOREPO.md) - Turborepo 构建工具使用指南
 - [开源白板项目选型.md](./开源白板项目选型.md) - 白板框架对比
 - [白板素材库对比.md](./白板素材库对比.md) - Excalidraw vs tldraw 素材库
@@ -22,6 +23,10 @@
 重要的技术决策记录在 [.claude/decisions/](../.claude/decisions/) 目录：
 - [ADR 001: 包管理器选择](../.claude/decisions/001-package-manager-pnpm.md)
 - [ADR 002: 构建工具选择](../.claude/decisions/002-build-tool-turborepo.md)
+- [ADR 003: Git 提交规范](../.claude/decisions/003-git-commit-convention.md)
+- [ADR 004: 白板框架选择](../.claude/decisions/004-whiteboard-excalidraw.md)
+- [ADR 005: 前端渲染方案](../.claude/decisions/005-frontend-rendering-csr.md)
+- [ADR 006: UI 框架选择](../.claude/decisions/006-ui-framework-tailwind-shadcn.md)
 
 ## 🔄 开发会话记录
 
