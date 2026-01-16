@@ -55,11 +55,16 @@
 - [x] 确定 UI 框架 - Tailwind CSS + shadcn/ui (2026-01-16)
 - [x] 记录 UI 框架架构决策（ADR 006）(2026-01-16)
 - [x] 确定使用 tweakcn.com 作为主题设计工具 (2026-01-16)
+- [x] 搭建前端项目基础框架（Vite + React + TypeScript）(2026-01-16)
+- [x] 配置 Tailwind CSS v4 和 shadcn/ui (2026-01-16)
+- [x] 配置 React Router 和基础页面 (2026-01-16)
+- [x] 调整路由结构为直接白板页面 (2026-01-16)
 
 ## 里程碑 🎉
 - **2026-01-14**: 项目初始化完成，首次提交 29 个文件，2785 行代码
 - **2026-01-14**: 完成白板框架选型，确定使用 Excalidraw
 - **2026-01-15**: 创建产品文档体系，开始产品规划阶段
+- **2026-01-16**: 完成前端框架搭建，技术栈确定（Vite + React + Tailwind v4 + shadcn/ui）
 
 ## 阻塞问题
 无
@@ -77,3 +82,5 @@
 - 2026-01-15: 完成前端渲染方案选型，确定采用 CSR (Vite + React)
 - 2026-01-16: 完成 UI 框架选型，确定采用 Tailwind CSS + shadcn/ui
 - 2026-01-16: 确定使用 tweakcn.com 作为主题设计工具
+- 2026-01-16: 搭建前端框架（Vite + React + TypeScript + Tailwind v4 + shadcn/ui + React Router）
+- 2026-01-16: 实现白板页面基础布局（顶栏 + 白板区 + AI 面板）

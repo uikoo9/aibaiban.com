@@ -31,15 +31,17 @@
 - **后端**: Node.js
 - **白板框架**: Excalidraw (npm: @excalidraw/excalidraw)
 
-## 待确定
-
-### 前端
-- **构建工具**: Vite 5.x（已确定 - ADR 005）
-- **框架**: React 18.x + TypeScript 5.x（已确定）
-- **路由**: React Router 6.x
-- **样式方案**: Tailwind CSS 3.x（已确定 - ADR 005）
+### 前端（已确定）
+- **构建工具**: Vite 7.x（已确定 - ADR 005）
+- **框架**: React 19.2.3 + TypeScript 5.9.3（已确定）
+- **路由**: React Router 7.12.0（已确定）
+- **样式方案**: Tailwind CSS v4（已确定 - ADR 005，ADR 006）
 - **组件库**: shadcn/ui（已确定 - ADR 006）
-- **状态管理**: Zustand（规划中）
+- **图标库**: lucide-react 0.562.0
+- **工具库**: clsx, tailwind-merge, class-variance-authority
+- **状态管理**: 待按需引入（规划 Zustand）
+
+## 待确定
 
 ### 白板相关
 - ✅ 核心框架：Excalidraw（已确定）
@@ -77,3 +79,4 @@
 - 2026-01-15: 确定前端渲染方案 - CSR (Vite + React)
 - 2026-01-16: 确定 UI 框架 - Tailwind CSS + shadcn/ui
 - 2026-01-16: 确定使用 tweakcn.com 作为主题设计工具
+- 2026-01-16: 完成前端框架搭建（Vite 7 + React 19 + TypeScript 5.9 + Tailwind v4 + shadcn/ui + React Router 7）
