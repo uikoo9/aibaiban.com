@@ -7,7 +7,10 @@
   "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=@aibaiban/web",
+    "dev:server": "turbo dev --filter=@aibaiban/server",
     "build": "turbo build",
+    "build:web": "turbo build --filter=@aibaiban/web",
     "lint": "turbo lint",
     "test": "turbo test",
     "clean": "turbo clean && rm -rf node_modules .turbo",

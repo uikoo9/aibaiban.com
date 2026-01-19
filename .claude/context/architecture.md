@@ -11,7 +11,7 @@
 │  ┌─────────────────────────────────────────┐   │
 │  │  前端应用 (React SPA)                    │   │
 │  │  - Vite + React + TypeScript             │   │
-│  │  - Tailwind CSS + shadcn/ui              │   │
+│  │  - Tailwind CSS + DaisyUI                │   │
 │  │  - React Router                          │   │
 │  └─────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────┘
@@ -38,7 +38,7 @@
 - **构建工具**: Vite 7.x
 - **框架**: React 19.2.3 + TypeScript 5.9.3
 - **路由**: React Router 7.12.0
-- **样式**: Tailwind CSS v4 + shadcn/ui
+- **样式**: Tailwind CSS v4 + DaisyUI 5
 - **状态管理**: 待按需引入（规划 Zustand）
 
 ### 目录结构
@@ -46,7 +46,6 @@
 packages/web/
 ├── index.html              # 入口 HTML
 ├── vite.config.ts          # Vite 配置
-├── tailwind.config.js      # Tailwind 配置
 ├── tsconfig.json           # TypeScript 配置
 ├── src/
 │   ├── main.tsx           # 应用入口
@@ -157,9 +156,11 @@ AI 返回生成数据（JSON）
 - ADR 003：Git 提交规范
 - ADR 004：白板框架选择 - Excalidraw
 - ADR 005：前端渲染方案 - CSR (Vite + React)
-- ADR 006：UI 框架选择 - Tailwind CSS + shadcn/ui
+- ADR 006：UI 框架选择 - Tailwind CSS + shadcn/ui (已废弃)
+- ADR 007：UI 框架切换 - Tailwind CSS + DaisyUI
 
 ## 更新记录
 - 2026-01-14: 创建架构文档
 - 2026-01-16: 补充前端架构设计（Vite + React + Tailwind + shadcn/ui）
 - 2026-01-16: 补充页面布局架构和路由设计
+- 2026-01-19: 切换 UI 框架到 DaisyUI，更新技术栈

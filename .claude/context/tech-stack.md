@@ -35,8 +35,8 @@
 - **构建工具**: Vite 7.x（已确定 - ADR 005）
 - **框架**: React 19.2.3 + TypeScript 5.9.3（已确定）
 - **路由**: React Router 7.12.0（已确定）
-- **样式方案**: Tailwind CSS v4（已确定 - ADR 005，ADR 006）
-- **组件库**: shadcn/ui（已确定 - ADR 006）
+- **样式方案**: Tailwind CSS v4（已确定 - ADR 005，ADR 007）
+- **组件库**: DaisyUI 5（已确定 - ADR 007）
 - **图标库**: lucide-react 0.562.0
 - **工具库**: clsx, tailwind-merge, class-variance-authority
 - **状态管理**: 待按需引入（规划 Zustand）
@@ -65,7 +65,7 @@
 ## 开发工具
 - **版本控制**: Git
 - **AI 辅助开发**: Claude Code
-- **主题设计**: tweakcn.com - shadcn/ui 主题可视化编辑器
+- **主题设计**: DaisyUI Theme Generator - 可视化主题编辑器
 - **AI 设计**: nanobanana（规划中）
 
 ## 决策记录
@@ -77,6 +77,7 @@
 - 2026-01-14: 确定使用 Turborepo 作为构建工具
 - 2026-01-14: 确定使用 Excalidraw 作为白板框架
 - 2026-01-15: 确定前端渲染方案 - CSR (Vite + React)
-- 2026-01-16: 确定 UI 框架 - Tailwind CSS + shadcn/ui
-- 2026-01-16: 确定使用 tweakcn.com 作为主题设计工具
+- 2026-01-16: 确定 UI 框架 - Tailwind CSS + shadcn/ui（已废弃）
+- 2026-01-16: 确定使用 tweakcn.com 作为主题设计工具（已废弃）
 - 2026-01-16: 完成前端框架搭建（Vite 7 + React 19 + TypeScript 5.9 + Tailwind v4 + shadcn/ui + React Router 7）
+- 2026-01-19: 切换 UI 框架到 DaisyUI 5，更新主题设计工具
