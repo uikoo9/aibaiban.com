@@ -8,21 +8,9 @@ function Board() {
   return (
     <div className="h-screen bg-base-100 flex flex-col">
       {/* 顶部导航栏 */}
-      <header className="h-14 border-b border-base-300 bg-base-200 px-4 flex items-center relative z-50">
-        <div className="flex-1 flex items-center gap-4">
-          <h1 className="text-lg font-semibold text-base-content">AI白板</h1>
-          <input
-            type="text"
-            placeholder="未命名白板"
-            className="input input-sm input-ghost"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeSwitcher />
-          <button className="btn btn-primary btn-sm">
-            分享
-          </button>
-        </div>
+      <header className="h-14 border-b border-base-300 bg-base-200 px-4 flex items-center justify-between relative z-50">
+        <h1 className="text-lg font-semibold text-base-content">AI白板</h1>
+        <ThemeSwitcher />
       </header>
 
       <div className="flex-1 flex">
