@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const themes = [
   'light',
@@ -37,6 +37,7 @@ const themes = [
 
 export function ThemeSwitcher() {
   const [currentTheme, setCurrentTheme] = useState('light')
+  const detailsRef = useRef<HTMLDetailsElement>(null)
 
   useEffect(() => {
     // 从 localStorage 读取保存的主题
@@ -49,10 +50,15 @@ export function ThemeSwitcher() {
     setCurrentTheme(theme)
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
+
+    // 关闭下拉菜单
+    if (detailsRef.current) {
+      detailsRef.current.open = false
+    }
   }
 
   return (
-    <details className="dropdown dropdown-end">
+    <details ref={detailsRef} className="dropdown dropdown-end">
       <summary className="btn btn-sm btn-ghost">
         <svg
           xmlns="http://www.w3.org/2000/svg"
