@@ -1,4 +1,4 @@
-# AI白板 (aibaiban.com)
+# AI白板 ([aibaiban.com](https://aibaiban.com/))
 
 > 一个完全由 AI 构建的智能白板协作平台
 
@@ -77,8 +77,6 @@ aibaiban.com/
 │   ├── types/
 │   │   ├── chat.ts                   # 聊天类型定义
 │   │   └── auth.ts                   # 认证类型定义
-│   └── lib/
-│       └── utils.ts                  # 工具函数
 ├── prds/                             # 产品需求文档
 │   ├── README.md                     # PRD 文档索引
 │   ├── PRD模板.md                    # PRD 文档模板
@@ -94,7 +92,7 @@ aibaiban.com/
 │   ├── daisyui.md                   # DaisyUI 组件文档
 │   └── GIT_COMMIT_GUIDELINES.md     # Git 提交规范
 ├── .gitignore                        # Git 忽略文件
-���── .husky/                           # Git hooks
+├── .husky/                           # Git hooks
 │   └── commit-msg                    # Commit 消息检查
 ├── commitlint.config.js              # Commitlint 配置
 ├── package.json                      # 项目配置

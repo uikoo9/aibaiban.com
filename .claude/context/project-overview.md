@@ -1,7 +1,7 @@
 # 项目概述
 
 ## 项目名称
-AI白板 (aibaiban.com)
+AI白板 ([aibaiban.com](https://aibaiban.com/))
 
 ## 项目定位
 一个基于 AI 的在线协作白板工具，旨在提供智能化的视觉协作体验。
