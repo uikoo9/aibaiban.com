@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Excalidraw } from '@excalidraw/excalidraw'
 import type { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types/types'
 import '@excalidraw/excalidraw/index.css'
@@ -25,6 +25,7 @@ const STORAGE_KEY = 'excalidraw-data'
 export function Whiteboard() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const [initialData, setInitialData] = useState<any>(null)
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // 加载保存的数据
   useEffect(() => {
@@ -65,10 +66,15 @@ export function Whiteboard() {
     return () => observer.disconnect()
   }, [])
 
-  // 保存数据（防抖）
+  // 保存数据（正确的防抖实现）
   const handleChange = useCallback((elements: readonly any[], appState: any) => {
-    // 使用 setTimeout 实现简单的防抖
-    const timeoutId = setTimeout(() => {
+    // 清除之前的 timeout
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+
+    // 设置新的 timeout
+    saveTimeoutRef.current = setTimeout(() => {
       const dataToSave = {
         elements,
         appState: {
@@ -79,8 +85,15 @@ export function Whiteboard() {
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave))
     }, 1000)
+  }, [])
 
-    return () => clearTimeout(timeoutId)
+  // 清理 timeout
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
   }, [])
 
   return (

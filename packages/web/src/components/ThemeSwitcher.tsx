@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
+import { Palette, Check } from 'lucide-react'
 
 const themes = [
   'light',
@@ -59,21 +60,11 @@ export function ThemeSwitcher() {
 
   return (
     <details ref={detailsRef} className="dropdown dropdown-end">
-      <summary className="btn btn-sm btn-ghost">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 2v10l4.5 4.5" />
-        </svg>
+      <summary
+        className="btn btn-sm btn-ghost"
+        aria-label="选择主题"
+      >
+        <Palette className="w-4 h-4" />
         <span className="hidden sm:inline">主题</span>
       </summary>
       <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300 max-h-96 overflow-y-auto">
@@ -81,23 +72,11 @@ export function ThemeSwitcher() {
           <li key={theme}>
             <button
               onClick={() => handleThemeChange(theme)}
-              className={currentTheme === theme ? 'active' : ''}
+              className={`${currentTheme === theme ? 'active' : ''}`}
             >
-              <span className="capitalize">{theme}</span>
+              <span className="capitalize flex-1">{theme}</span>
               {currentTheme === theme && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
+                <Check className="w-4 h-4" />
               )}
             </button>
           </li>
