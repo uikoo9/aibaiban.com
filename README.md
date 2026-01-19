@@ -18,13 +18,13 @@ AI白板是一个基于人工智能的在线协作白板工具，致力于提供
 ## 技术栈
 
 ### 已确定
-- **包管理器**: pnpm - 为 Monorepo 优化，快速且节省磁盘空间
-- **构建工具**: Turborepo - 增量构建和智能缓存
-- **白板框架**: Excalidraw - 丰富素材库，手绘风格，MIT 协议
-- **前端渲染**: CSR (Vite 5.x + React 18.x + TypeScript 5.x)
-- **样式方案**: Tailwind CSS 3.x
-- **组件库**: shadcn/ui - 可定制化的现代 UI 组件
-- **后端**: Node.js - JavaScript 全栈开发
+- **包管理器**: pnpm 10.28.0 - 为 Monorepo 优化，快速且节省磁盘空间
+- **构建工具**: Turborepo 2.7.4 - 增量构建和智能缓存
+- **白板框架**: Excalidraw 0.18.0 - 丰富素材库，手绘风格，MIT 协议
+- **前端渲染**: CSR (Vite 7.3.1 + React 19.2.3 + TypeScript 5.9.3)
+- **样式方案**: Tailwind CSS v4 + DaisyUI 5 - 预设主题，开箱即用
+- **路由**: React Router 7.12.0
+- **后端**: Node.js - JavaScript 全栈开发（待实现）
 - **项目架构**: Monorepo - 统一管理前后端代码
 
 ### 规划中
@@ -60,7 +60,25 @@ aibaiban.com/
 │   └── tasks/                        # 任务管理
 │       └── current-sprint.md
 ├── packages/                         # Monorepo 包目录
-│   ├── web/                          # 前端应用
+│   ├── web/                          # 前端应用（已完成基础框架）
+│   │   ├── src/
+│   │   │   ├── main.tsx              # 应用入口
+│   │   │   ├── App.tsx               # 根组件（路由配置���
+│   │   │   ├── index.css             # 全局样式
+│   │   │   ├── pages/
+│   │   │   │   └── Board.tsx         # 白板主页面
+│   │   │   ├── components/
+│   │   │   │   ├── Whiteboard.tsx    # Excalidraw 集成组件
+│   │   │   │   ├── ThemeSwitcher.tsx # 主题切换组件
+│   │   │   │   └── Chat/
+│   │   │   │       ├── ChatPanel.tsx # AI 聊天面板
+│   │   │   │       └── MessageBubble.tsx # 消息气泡组件
+│   │   │   ├── hooks/
+│   │   │   │   └── useChat.ts        # 聊天逻辑 Hook
+│   │   │   ├── types/
+│   │   │   │   └── chat.ts           # 聊天类型定义
+│   │   │   └── lib/
+│   │   │       └── utils.ts          # 工具函数
 │   │   ├── package.json
 │   │   └── README.md
 │   ├── server/                       # 后端服务
@@ -156,7 +174,13 @@ git commit -m "docs: 更新开发文档"
 
 ## 项目状态
 
-🟢 **开发阶段** - 前端框架已搭建完成，开始功能开发
+🟢 **开发阶段** - 前端基础框架已完成，AI 聊天面板 Mock 版本已实现
+
+### 已完成
+- ✅ Excalidraw 白板集成（支持主题切换、本地存储）
+- ✅ DaisyUI 主题系统（32 个预设主题）
+- ✅ AI 聊天面板 UI（Mock 数据版本）
+- ✅ 消息历史本地存储
 
 ## 路线图
 
@@ -167,24 +191,26 @@ git commit -m "docs: 更新开发文档"
 - [x] 安装并配置 Turborepo
 - [x] 确定白板框架 (Excalidraw)
 - [x] 确定前端渲染方案 (CSR - Vite + React)
-- [x] 确定 UI 框架 (Tailwind CSS + shadcn/ui)
+- [x] 确定 UI 框架 (Tailwind CSS + DaisyUI)
 - [x] 创建产品文档结构 (prds/)
 - [x] 搭建前端项目框架
+- [x] 集成 Excalidraw 白板
+- [x] 实现主题切换功能
 - [ ] 确定后端框架
-- [ ] 集成 Excalidraw
 
 ### 产品规划
 - [x] 创建产品概述文档
 - [x] 确定 MVP 功能范围
-- [ ] 集成 Excalidraw
-- [ ] 开发 AI 聊天面板
+- [x] 开发 AI 聊天面板 UI（Mock 版本）
+- [ ] 集成真实 AI API
 - [ ] 设计核心用户流程
 - [ ] 细化功能 PRD
 
 ### 开发实现
 - [x] 搭建前端基础框架
-- [ ] 集成 Excalidraw
-- [ ] 开发 AI 聊天面板
+- [x] 集成 Excalidraw
+- [x] 开发 AI 聊天面板 Mock 版本
+- [ ] 集成真实 AI API (OpenAI/Claude)
 - [ ] 实现第一个 AI 功能（生成流程图）
 - [ ] 实现实时协作
 

@@ -1,12 +1,13 @@
 # 当前任务
 
 ## Sprint 目标
-产品规划和核心功能定义
+前端核心功能开发 - AI 聊天面板实现
 
 ## 任务列表
 
 ### 🟡 进行中
-- [ ] 确定 MVP 的 AI 功能范围（已有初步方向）
+- [ ] 集成真实 AI API (OpenAI / Claude)
+- [ ] 实现 AI 生成白板元素功能
 
 ### 📋 待开始
 - [ ] 细化 AI Prompt 设计（流程图、思维导图生成）
@@ -14,10 +15,7 @@
 - [ ] 确定后��框架（Express / Fastify）
 - [ ] 确定 AI 模型选择（GPT-4 / Claude / 自建）
 - [ ] 确定实时协作方案
-- [ ] 搭建项目基础框架
-- [ ] 集成 Excalidraw (@excalidraw/excalidraw)
-- [ ] 开发 AI 聊天面板组件
-- [ ] 集成 AI API
+- [ ] 确定 MVP 的 AI 功能范围
 - [ ] 设计数据模型
 - [ ] 实现第一个 AI 功能原型（生成流程图）
 
@@ -60,12 +58,21 @@
 - [x] 配置 React Router 和基础页面 (2026-01-16)
 - [x] 调整路由结构为直接白板页面 (2026-01-16)
 - [x] 切换 UI 框架到 DaisyUI 5 (2026-01-19)
+- [x] 集成 Excalidraw 白板组件 (@excalidraw/excalidraw 0.18.0) (2026-01-19)
+- [x] 实现主题切换功能（支持 DaisyUI 32 个主题）(2026-01-19)
+- [x] 实现白板数据本地存储（localStorage + 防抖保存）(2026-01-19)
+- [x] 创建聊天相关类型定义 (types/chat.ts) (2026-01-19)
+- [x] 实现 useChat Hook（Mock AI 回复 + localStorage 持久化）(2026-01-19)
+- [x] 创建 MessageBubble 组件（支持用户/AI/系统消息）(2026-01-19)
+- [x] 创建 ChatPanel 组件（完整聊天面板 UI）(2026-01-19)
+- [x] 集成 ChatPanel 到 Board 页面右侧面板 (2026-01-19)
 
 ## 里程碑 🎉
 - **2026-01-14**: 项目初始化完成，首次提交 29 个文件，2785 行代码
 - **2026-01-14**: 完成白板框架选型，确定使用 Excalidraw
 - **2026-01-15**: 创建产品文档体系，开始产品规划阶段
 - **2026-01-16**: 完成前端框架搭建，技术栈确定（Vite + React + Tailwind v4 + shadcn/ui）
+- **2026-01-19**: 切换到 DaisyUI，完成 Excalidraw 集成和 AI 聊天面板 Mock 版本 🎉
 
 ## 阻塞问题
 无
@@ -86,3 +93,5 @@
 - 2026-01-16: 搭建前端框架（Vite + React + TypeScript + Tailwind v4 + shadcn/ui + React Router）
 - 2026-01-16: 实现白板页面基础布局（顶栏 + 白板区 + AI 面板）
 - 2026-01-19: 切换 UI 框架到 DaisyUI 5，解决主题切换问题
+- 2026-01-19: 完成 Excalidraw 集成（主题适配、本地存储、中文界面）
+- 2026-01-19: 完成 AI 聊天面板 Mock 版本（useChat Hook + MessageBubble + ChatPanel）
