@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
@@ -13,4 +13,9 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  build: {
+    outDir: '../shun-js/packages/aibaiban-server/static',
+    assetsDir: '.',
+  },
+  base: 'https://static-small.vincentqiao.com/aibaiban/static/',
 })
