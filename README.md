@@ -55,6 +55,11 @@ aibaiban.com/
 │   │   └── 006-ui-framework-tailwind-shadcn.md
 │   ├── sessions/                     # 开发会话记录
 │   │   └── 2026-01/
+│   │       ├── 14-project-init.md
+│   │       ├── 15-product-planning.md
+│   │       ├── 16-frontend-setup.md
+│   │       ├── 19-chat-panel.md
+│   │       └── 20-lighthouse-optimization.md
 │   └── tasks/                        # 任务管理
 │       └── current-sprint.md
 ├── src/                              # 源代码目录
@@ -74,9 +79,21 @@ aibaiban.com/
 │   ├── hooks/
 │   │   ├── useChat.ts                # 聊天逻辑 Hook
 │   │   └── useAuth.ts                # 认证逻辑 Hook
-│   ├── types/
-│   │   ├── chat.ts                   # 聊天类型定义
-│   │   └── auth.ts                   # 认证类型定义
+│   └── types/
+│       ├── chat.ts                   # 聊天类型定义
+│       └── auth.ts                   # 认证类型定义
+├── public/                           # 静态资源目录
+│   ├── logo.svg                      # 项目 Logo
+│   ├── favicon.ico                   # 网站图标
+│   ├── icon-192.png                  # PWA 图标 (192x192)
+│   ├── icon-512.png                  # PWA 图标 (512x512)
+│   ├── apple-touch-icon.png          # iOS 主屏图标
+│   ├── og-image.png                  # 社交分享图片
+│   ├── manifest.json                 # PWA 清单
+│   └── robots.txt                    # 搜索引擎规则
+├── scripts/                          # 构建脚本
+│   ├── generate-icons.js             # PNG 图标生成脚本
+│   └── generate-favicon.js           # Favicon 生成脚本
 ├── prds/                             # 产品需求文档
 │   ├── README.md                     # PRD 文档索引
 │   ├── PRD模板.md                    # PRD 文档模板
@@ -169,13 +186,19 @@ git commit -m "docs: 更新开发文档"
 🟢 **开发阶段** - 前端基础框架已完成，手机号登录和 AI 聊天面板已实现
 
 ### 已完成
+- ✅ 项目 Logo 设计（蓝色长方形白板 + AI 字样）
+- ✅ PWA 资源完善（manifest.json、robots.txt、各尺寸图标）
+- ✅ 图标生成自动化（SVG→PNG、favicon.ico）
+- ✅ Lighthouse 审计优化（SEO、无障碍、性能）
+- ✅ 构建配置优化（环境区分、自动清理）
 - ✅ Excalidraw 白板集成（支持主题切换、本地存储）
-- ✅ DaisyUI 主题系统（37 个预设主题）
+- ✅ DaisyUI 主题系统（32 个预设主题）
 - ✅ AI 聊天面板 UI（Mock 数据版本）
 - ✅ 手机号 + 验证码登录（Mock UI）
 - ✅ 登录状态持久化
 - ✅ 消息历史本地存储
 - ✅ UI/UX 设计规范文档
+- ✅ Header 品牌展示（Logo + 域名）
 
 ## 路线图
 
@@ -190,6 +213,9 @@ git commit -m "docs: 更新开发文档"
 - [x] 集成 Excalidraw 白板
 - [x] 实现主题切换功能
 - [x] 简化项目结构（移除 Monorepo）
+- [x] 设计项目 Logo 和品牌视觉
+- [x] 完善 PWA 资源和 SEO
+- [x] 优化构建配置和工作流
 - [ ] 确定后端框架
 
 ### 产品规划

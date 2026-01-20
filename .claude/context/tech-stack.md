@@ -1,45 +1,71 @@
 # 技术栈
 
-> 当前状态：规划中
+> 当前状态：前端开发中
 
 ## 核心技术（已确定）
 
 ### 包管理器
-**pnpm** - Performant npm
-- 为 Monorepo 优化设计
+**pnpm 10.28.0** - Performant npm
 - 安装速度比 npm 快 2-3 倍
 - 通过硬链接大幅节省磁盘空间
 - 严格的依赖管理，避免幽灵依赖
 - 被 Vue 3、Vite、Microsoft 等大型项目使用
 
 ### 项目架构
-**Monorepo** - 单一代码仓库管理多个包
-- 前后端代码统一管理
-- 便于共享组件和工具
-- 简化依赖管理和版本控制
-
-### 构建工具
-**Turborepo** - 高性能 Monorepo 构建系统
-- 智能缓存：基于内容哈希，永不重复构建
-- 并行执行：充分利��多核 CPU
-- 增量构建：只构建改变的部分
-- 实测性能：缓存命中时速度提升 20 倍+
-- 配置简单，与 pnpm 完美集成
+**单体应用** - 简化的项目结构
+- 前端 React 应用
+- 未来规划后端服务
+- 便于快速迭代和部署
 
 ### 语言和框架基础
-- **前端**: React
-- **后端**: Node.js
-- **白板框架**: Excalidraw (npm: @excalidraw/excalidraw)
+- **前端**: React 19.2.3 + TypeScript 5.9.3
+- **后端**: Node.js（规划中）
+- **白板框架**: Excalidraw 0.18.0 (npm: @excalidraw/excalidraw)
 
 ### 前端（已确定）
-- **构建工具**: Vite 7.x（已确定 - ADR 005）
+- **构建工具**: Vite 7.3.1（已确定 - ADR 005）
 - **框架**: React 19.2.3 + TypeScript 5.9.3（已确定）
 - **路由**: React Router 7.12.0（已确定）
 - **样式方案**: Tailwind CSS v4（已确定 - ADR 005，ADR 007）
-- **组件库**: DaisyUI 5（已确定 - ADR 007）
+- **组件库**: DaisyUI 5.5.14（已确定 - ADR 007）
 - **图标库**: lucide-react 0.562.0
 - **工具库**: clsx, tailwind-merge, class-variance-authority
 - **状态管理**: 待按需引入（规划 Zustand）
+
+### 开发工具
+- **版本控制**: Git
+- **AI 辅助开发**: Claude Code
+- **图像处理**: sharp 0.34.5 - SVG 转 PNG
+- **Favicon 生成**: to-ico 1.1.5 - 生成多分辨率 .ico 文件
+- **主题设计**: DaisyUI Theme Generator - 可视化主题编辑器
+
+### 构建和部署
+- **构建输出**: ../shun-js/packages/aibaiban-server/static
+- **CDN**: static-small.vincentqiao.com
+- **环境区分**:
+  - 开发环境：本地路径 (/)
+  - 生产环境：CDN 路径
+- **自动化**: 构建前自动清理输出目录 (emptyOutDir: true)
+
+### PWA 支持
+- **Manifest**: manifest.json - PWA 应用清单
+- **图标资源**:
+  - 192x192 PWA 图标
+  - 512x512 PWA 图标
+  - 180x180 Apple Touch Icon
+  - 1200x1200 OG Image
+  - 32x32、16x16 Favicon
+- **SEO 优化**:
+  - robots.txt
+  - 完整 meta 标签
+  - Open Graph 标签
+  - Twitter Card 标签
+  - 社交分享图片
+
+### 品牌资产
+- **Logo**: 蓝色长方形白板 + AI 字样
+- **配色**: #2563EB (Primary Blue) + #FFFFFF (White)
+- **尺寸**: 512x512px，框架 460x260px，文字 180px
 
 ## 待确定
 
@@ -59,25 +85,19 @@
 - 大模型接入：OpenAI / Anthropic Claude / ...
 - AI 功能：待规划
 
-### 部署方案
-待定义...
-
-## 开发工具
-- **版本控制**: Git
-- **AI 辅助开发**: Claude Code
-- **主题设计**: DaisyUI Theme Generator - 可视化主题编辑器
-- **AI 设计**: nanobanana（规划中）
-
 ## 决策记录
 参考根目录 [技术选型.md](../../../docs/技术选型.md) 和 [decisions](../decisions/) 目录
 
 ## 更新记录
 - 2026-01-14: 创建技术栈文档
-- 2026-01-14: 确定使用 pnpm 作为包管理器，Monorepo 架构
-- 2026-01-14: 确定使用 Turborepo 作为构建工具
+- 2026-01-14: 确定使用 pnpm 作为包管理器
 - 2026-01-14: 确定使用 Excalidraw 作为白板框架
 - 2026-01-15: 确定前端渲染方案 - CSR (Vite + React)
 - 2026-01-16: 确定 UI 框架 - Tailwind CSS + shadcn/ui（已废弃）
 - 2026-01-16: 确定使用 tweakcn.com 作为主题设计工具（已废弃）
 - 2026-01-16: 完成前端框架搭建（Vite 7 + React 19 + TypeScript 5.9 + Tailwind v4 + shadcn/ui + React Router 7）
 - 2026-01-19: 切换 UI 框架到 DaisyUI 5，更新主题设计工具
+- 2026-01-19: 移除 Monorepo 结构，简化为单体应用
+- 2026-01-20: 添加 Logo 设计和图标生成工具（sharp、to-ico）
+- 2026-01-20: 完善 PWA 资源和 SEO 优化
+- 2026-01-20: 配置 CDN 部署和环境区分
