@@ -18,7 +18,7 @@ AI白板是一个基于人工智能的在线协作白板工具，致力于提供
 ## 技术栈
 
 ### 已确定
-- **包管理器**: pnpm 10.28.0 - 快速且节省磁盘空间
+- **包管理器**: npm - Node.js 默认包管理器，通用且简单
 - **构建工具**: Vite 7.3.1 - 快速的开发服务器和构建工具
 - **白板框架**: Excalidraw 0.18.0 - 丰富素材库，手绘风格，MIT 协议
 - **前端框架**: React 19.2.3 + TypeScript 5.9.3
@@ -124,26 +124,23 @@ aibaiban.com/
 
 ### 前置要求
 - Node.js >= 18
-- pnpm >= 8
-
-### 安装 pnpm
-```bash
-npm install -g pnpm
-```
 
 ### 开发
 ```bash
 # 安装依赖
-pnpm install
+npm install
 
 # 启动开发服务器
-pnpm dev
+npm run dev
 
 # 构建项目
-pnpm build
+npm run build
 
 # 预览构建结果
-pnpm preview
+npm run preview
+
+# 生成图标
+npm run generate-icons
 ```
 
 访问 http://localhost:3000 查看应用
