@@ -11,8 +11,9 @@
     "preview": "vite preview",
     "lint": "echo 'Lint - to be configured'",
     "test": "echo 'Test - to be configured'",
-    "clean": "rm -rf node_modules",
-    "prepare": "husky"
+    "clean": "rm -rf node_modules build",
+    "prepare": "husky",
+    "generate-icons": "node scripts/generate-icons.js && node scripts/generate-favicon.js"
   },
   "keywords": [
     "whiteboard",
@@ -35,7 +36,9 @@
     "daisyui": "^5.5.14",
     "husky": "^9.1.7",
     "postcss": "^8.5.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.1.18",
+    "to-ico": "^1.1.5",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   },

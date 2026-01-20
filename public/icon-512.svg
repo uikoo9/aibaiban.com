@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 - 白色 -->
+  <rect width="512" height="512" fill="#FFFFFF"/>
+
+  <!-- 白板框 - 长方形 -->
+  <rect x="26" y="126" width="460" height="260" rx="24" fill="#FFFFFF" stroke="#2563EB" stroke-width="12"/>
+
+  <!-- AI 文字 - 180px -->
+  <text x="256" y="319" font-family="system-ui, -apple-system, sans-serif" font-size="180" font-weight="700" fill="#2563EB" text-anchor="middle">AI</text>
+</svg>

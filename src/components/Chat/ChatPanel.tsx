@@ -94,7 +94,7 @@ export function ChatPanel() {
               <p className="text-sm">👋 你好！我是 AI 助手</p>
               <p className="text-xs mt-2">有什么可以帮你的吗？</p>
               {!isAuthenticated && (
-                <p className="text-xs mt-4 text-warning">
+                <p className="text-xs mt-4 text-primary font-medium">
                   💡 发送消息前需要先登录
                 </p>
               )}
@@ -148,7 +148,7 @@ export function ChatPanel() {
           {isAuthenticated ? (
             '按 Enter 发送，Shift + Enter 换行'
           ) : (
-            <span className="text-warning">点击发送按钮登录后使用 AI 助手</span>
+            <span className="text-primary font-medium">点击发送按钮登录后使用 AI 助手</span>
           )}
         </div>
       </div>

@@ -95,6 +95,48 @@ export function Whiteboard() {
     }
   }, [])
 
+  // 修复 Excalidraw 按钮的无障碍问题
+  useEffect(() => {
+    const addAriaLabels = () => {
+      // 为主菜单按钮添加 aria-label
+      const mainMenuButton = document.querySelector('[data-testid="main-menu-trigger"]')
+      if (mainMenuButton && !mainMenuButton.getAttribute('aria-label')) {
+        mainMenuButton.setAttribute('aria-label', '主菜单')
+      }
+
+      // 为其他没有 aria-label 的按钮添加
+      const buttons = document.querySelectorAll('button:not([aria-label]):not([aria-labelledby])')
+      buttons.forEach((button) => {
+        const testId = button.getAttribute('data-testid')
+        const title = button.getAttribute('title')
+
+        if (testId === 'main-menu-trigger') {
+          button.setAttribute('aria-label', '主菜单')
+        } else if (title) {
+          button.setAttribute('aria-label', title)
+        }
+      })
+    }
+
+    // 初始化时添加
+    const timer = setTimeout(addAriaLabels, 1000)
+
+    // 监听 DOM 变化，动态添加
+    const observer = new MutationObserver(() => {
+      addAriaLabels()
+    })
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
+
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
+  }, [])
+
   return (
     <div className="w-full h-full">
       <Excalidraw
