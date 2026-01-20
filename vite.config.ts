@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
   resolve: {
     alias: {
@@ -16,6 +16,8 @@ export default defineConfig({
   build: {
     outDir: '../shun-js/packages/aibaiban-server/static',
     assetsDir: '.',
+    emptyOutDir: true, // 构建前自动清空输出目录
   },
-  base: 'https://static-small.vincentqiao.com/aibaiban/static/',
-})
+  // 开发环境使用默认路径，生产环境使用 CDN
+  base: command === 'serve' ? '/' : 'https://static-small.vincentqiao.com/aibaiban/static/',
+}))

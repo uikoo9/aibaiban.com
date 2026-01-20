@@ -9,7 +9,10 @@ function Board() {
     <div className="h-screen bg-base-100 flex flex-col">
       {/* 顶部导航栏 */}
       <header className="h-14 border-b border-base-300 bg-base-200 px-4 flex items-center justify-between relative z-50">
-        <h1 className="text-lg font-semibold text-base-content">AI白板</h1>
+        <div className="flex items-center gap-2">
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="AI白板" className="h-8 w-8" />
+          <h1 className="text-lg font-semibold text-base-content">aibaiban.com</h1>
+        </div>
         <ThemeSwitcher />
       </header>
 
