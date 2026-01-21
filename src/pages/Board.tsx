@@ -1,23 +1,75 @@
-import { Suspense, lazy, useState, useRef } from 'react'
+import { Suspense, lazy, useState, useRef, useEffect } from 'react'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { ChatPanel } from '@/components/Chat/ChatPanel'
 import { LoginModal } from '@/components/Auth/LoginModal'
 import { useAuth } from '@/hooks/useAuth'
-import { User, LogOut } from 'lucide-react'
+import { User, LogOut, Github, GripVertical } from 'lucide-react'
 // import { Shapes } from 'lucide-react' // 测试按钮需要时取消注释
 import type { WhiteboardHandle } from '@/components/Whiteboard'
 
 const Whiteboard = lazy(() => import('@/components/Whiteboard').then(m => ({ default: m.Whiteboard })))
+
+const MIN_CHAT_WIDTH = 280
+const MAX_CHAT_WIDTH = 600
+const DEFAULT_CHAT_WIDTH = 320
+const CHAT_WIDTH_STORAGE_KEY = 'chat-panel-width'
 
 function Board() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const { isAuthenticated, user, logout } = useAuth()
   const whiteboardRef = useRef<WhiteboardHandle>(null)
 
+  // 聊天面板宽度状态
+  const [chatWidth, setChatWidth] = useState(() => {
+    const saved = localStorage.getItem(CHAT_WIDTH_STORAGE_KEY)
+    return saved ? Number(saved) : DEFAULT_CHAT_WIDTH
+  })
+  const [isResizing, setIsResizing] = useState(false)
+
   // 测试按钮需要时取消注释
   // const handleAddRandomShape = () => {
   //   whiteboardRef.current?.addRandomShape()
   // }
+
+  // 保存宽度到 LocalStorage
+  useEffect(() => {
+    localStorage.setItem(CHAT_WIDTH_STORAGE_KEY, String(chatWidth))
+  }, [chatWidth])
+
+  // 处理拖动开始
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsResizing(true)
+  }
+
+  // 处理拖动中
+  useEffect(() => {
+    if (!isResizing) return
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newWidth = window.innerWidth - e.clientX
+      const clampedWidth = Math.max(MIN_CHAT_WIDTH, Math.min(MAX_CHAT_WIDTH, newWidth))
+      setChatWidth(clampedWidth)
+    }
+
+    const handleMouseUp = () => {
+      setIsResizing(false)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+
+    // 拖动时禁用选择文本
+    document.body.style.userSelect = 'none'
+    document.body.style.cursor = 'col-resize'
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.userSelect = ''
+      document.body.style.cursor = ''
+    }
+  }, [isResizing])
 
   return (
     <div className="h-screen bg-base-100 flex flex-col">
@@ -84,6 +136,18 @@ function Board() {
           )}
 
           <ThemeSwitcher />
+
+          {/* GitHub 链接 */}
+          <a
+            href="https://github.com/uikoo9/aibaiban.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost gap-2 h-10 min-h-10"
+            aria-label="查看 GitHub 仓库"
+          >
+            <Github className="w-4 h-4" />
+            <span className="hidden sm:inline text-sm font-medium">GitHub</span>
+          </a>
         </div>
       </header>
 
@@ -101,8 +165,31 @@ function Board() {
           </Suspense>
         </div>
 
+        {/* 可拖动分隔条 */}
+        <div
+          className={`w-1 bg-base-300 hover:bg-primary hover:w-1.5 transition-all cursor-col-resize flex items-center justify-center group relative z-20 ${
+            isResizing ? 'bg-primary w-1.5' : ''
+          }`}
+          onMouseDown={handleMouseDown}
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="调整聊天面板宽度"
+        >
+          {/* 拖动手柄 */}
+          <div className="absolute inset-y-0 -left-1 -right-1 flex items-center justify-center">
+            <div className={`rounded-full bg-base-300 p-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+              isResizing ? 'opacity-100 bg-primary text-primary-content' : ''
+            }`}>
+              <GripVertical className="w-3 h-3" />
+            </div>
+          </div>
+        </div>
+
         {/* 右侧 AI 助手面板 */}
-        <aside className="w-80 bg-base-100 border-l border-base-300 flex flex-col relative z-10">
+        <aside
+          className="bg-base-100 border-l border-base-300 flex flex-col relative z-10"
+          style={{ width: `${chatWidth}px` }}
+        >
           <ChatPanel />
         </aside>
       </div>

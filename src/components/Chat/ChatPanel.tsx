@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { Send, Trash2 } from 'lucide-react'
+import { Send, Trash2, X } from 'lucide-react'
 import { useChat } from '@/hooks/useChat'
 import { useAuth } from '@/hooks/useAuth'
 import { MessageBubble } from './MessageBubble'
@@ -10,13 +10,22 @@ export function ChatPanel() {
   const { isAuthenticated, user } = useAuth()
   const [inputValue, setInputValue] = useState('')
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   // 自动滚动到底部
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // 自动调整 textarea 高度
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto'
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
+    }
+  }, [inputValue])
 
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading) return
@@ -32,7 +41,7 @@ export function ChatPanel() {
     inputRef.current?.focus()
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
@@ -41,9 +50,17 @@ export function ChatPanel() {
 
   const handleClear = () => {
     if (messages.length === 0) return
-    if (confirm('确定要清空所有对话吗？')) {
-      clearMessages()
-    }
+    setIsClearConfirmOpen(true)
+  }
+
+  const confirmClear = () => {
+    clearMessages()
+    setIsClearConfirmOpen(false)
+  }
+
+  const handleClearInput = () => {
+    setInputValue('')
+    inputRef.current?.focus()
   }
 
   return (
@@ -147,32 +164,35 @@ export function ChatPanel() {
 
       {/* 输入框 */}
       <div className="p-5 border-t border-base-300 bg-base-100">
-        <div className="flex gap-3">
-          <input
+        <div className="relative">
+          <textarea
             ref={inputRef}
-            type="text"
             placeholder="输入你的需求..."
-            className="input input-bordered flex-1 h-11 text-base"
+            className="textarea textarea-bordered w-full text-base resize-none min-h-[88px] max-h-[200px] pr-24 pb-12"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
             disabled={isLoading}
+            rows={3}
           />
+          {inputValue && (
+            <button
+              onClick={handleClearInput}
+              className="absolute right-2 top-2 btn btn-ghost btn-xs btn-circle"
+              title="清空输入"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
           <button
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
-            className="btn btn-primary h-11 min-h-11 px-5 shadow-md shadow-primary/20"
-            title="发送"
+            className="absolute right-2 bottom-2 btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
+            title="发送 (Enter)"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4" />
+            <span className="text-xs">发送</span>
           </button>
-        </div>
-        <div className="text-xs text-base-content/60 mt-3">
-          {isAuthenticated ? (
-            '按 Enter 发送，Shift + Enter 换行'
-          ) : (
-            <span className="text-primary font-medium">点击发送按钮登录后使用 AI 助手</span>
-          )}
         </div>
       </div>
 
@@ -181,6 +201,33 @@ export function ChatPanel() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
       />
+
+      {/* 清空确认弹窗 */}
+      {isClearConfirmOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg mb-4">清空对话</h3>
+            <p className="text-base-content/80 mb-6">
+              确定要清空所有对话吗？此操作无法撤销。
+            </p>
+            <div className="modal-action">
+              <button
+                onClick={() => setIsClearConfirmOpen(false)}
+                className="btn btn-ghost"
+              >
+                取消
+              </button>
+              <button
+                onClick={confirmClear}
+                className="btn btn-error"
+              >
+                清空
+              </button>
+            </div>
+          </div>
+          <div className="modal-backdrop" onClick={() => setIsClearConfirmOpen(false)}></div>
+        </div>
+      )}
     </>
   )
 }
