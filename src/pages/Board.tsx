@@ -3,9 +3,9 @@ import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { ChatPanel } from '@/components/Chat/ChatPanel'
 import { LoginModal } from '@/components/Auth/LoginModal'
 import { useAuth } from '@/hooks/useAuth'
-import { User, LogOut, Github, GripVertical } from 'lucide-react'
-// import { Shapes } from 'lucide-react' // 测试按钮需要时取消注释
+import { User, LogOut, Github, GripVertical, Sparkles } from 'lucide-react'
 import type { WhiteboardHandle } from '@/components/Whiteboard'
+import type { SimplifiedDiagram } from '@/types/diagram'
 
 const Whiteboard = lazy(() => import('@/components/Whiteboard').then(m => ({ default: m.Whiteboard })))
 
@@ -25,8 +25,64 @@ function Board() {
     return saved ? Number(saved) : DEFAULT_CHAT_WIDTH
   })
   const [isResizing, setIsResizing] = useState(false)
+  const [showAIModal, setShowAIModal] = useState(false)
 
-  // 测试按钮需要时取消注释
+  // 模拟大模型返回的架构图数据
+  const mockAIResponse: SimplifiedDiagram = {
+    type: 'architecture',
+    title: 'App 架构图',
+    nodes: [
+      {
+        id: 'frontend',
+        label: '前端层\nReact + Vite',
+        type: 'rectangle',
+        color: 'blue',
+      },
+      {
+        id: 'backend',
+        label: '后端服务\nNode.js API',
+        type: 'rectangle',
+        color: 'green',
+      },
+      {
+        id: 'database',
+        label: '数据库\nPostgreSQL',
+        type: 'ellipse',
+        color: 'purple',
+      },
+      {
+        id: 'cache',
+        label: '缓存层\nRedis',
+        type: 'diamond',
+        color: 'orange',
+      },
+      {
+        id: 'cdn',
+        label: 'CDN\n静态资源',
+        type: 'ellipse',
+        color: 'red',
+      },
+    ],
+    connections: [
+      { from: 'frontend', to: 'backend', label: 'HTTPS' },
+      { from: 'frontend', to: 'cdn', label: 'Assets' },
+      { from: 'backend', to: 'database', label: 'SQL' },
+      { from: 'backend', to: 'cache', label: 'Cache' },
+    ],
+  }
+
+  // 处理 AI 生成图表
+  const handleGenerateAIDiagram = () => {
+    setShowAIModal(true)
+  }
+
+  // 确认生成
+  const confirmGenerate = () => {
+    whiteboardRef.current?.addAIGeneratedDiagram(mockAIResponse)
+    setShowAIModal(false)
+  }
+
+  // 测试按钮（旧功能，保留）
   // const handleAddRandomShape = () => {
   //   whiteboardRef.current?.addRandomShape()
   // }
@@ -86,15 +142,15 @@ function Board() {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* 测试按钮 - 添加随机形状 (暂时隐藏) */}
-          {/* <button
-            onClick={handleAddRandomShape}
+          {/* AI 生成图表按钮 */}
+          <button
+            onClick={handleGenerateAIDiagram}
             className="btn btn-ghost gap-2 h-10 min-h-10"
-            aria-label="添加随机形状"
+            aria-label="AI 生成图���"
           >
-            <Shapes className="w-4 h-4" />
-            <span className="hidden sm:inline text-sm font-medium">测试形状</span>
-          </button> */}
+            <Sparkles className="w-4 h-4" />
+            <span className="hidden sm:inline text-sm font-medium">AI 生成</span>
+          </button>
 
           {/* 登录/用户信息 */}
           {isAuthenticated && user ? (
@@ -199,6 +255,66 @@ function Board() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
       />
+
+      {/* AI 生成图表模态框 */}
+      {showAIModal && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-2xl">
+            <h3 className="font-bold text-lg mb-4">模拟大模型返回内容</h3>
+            <p className="text-sm text-base-content/60 mb-4">
+              以下是大模型返回的简化图表格式，点击"生成图表"将转换为白板内容
+            </p>
+
+            {/* 显示 JSON 内容 */}
+            <div className="mockup-code mb-6">
+              <pre className="px-6 py-4">
+                <code className="text-sm">{JSON.stringify(mockAIResponse, null, 2)}</code>
+              </pre>
+            </div>
+
+            <div className="alert alert-info mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="h-6 w-6 shrink-0 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <div className="text-sm">
+                <p className="font-semibold mb-1">说明：</p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>大模型输出简化的 JSON 格式（nodes + connections）</li>
+                  <li>前端转换器自动转换为 Excalidraw 元素</li>
+                  <li>支持自动布局、颜色映射、箭头连接</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="modal-action">
+              <button
+                onClick={() => setShowAIModal(false)}
+                className="btn btn-ghost"
+              >
+                取消
+              </button>
+              <button
+                onClick={confirmGenerate}
+                className="btn btn-primary gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                生成图表
+              </button>
+            </div>
+          </div>
+          <div className="modal-backdrop" onClick={() => setShowAIModal(false)}></div>
+        </div>
+      )}
     </div>
   )
 }

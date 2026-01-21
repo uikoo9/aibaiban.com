@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react'
 import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
+import type { SimplifiedDiagram } from '@/types/diagram'
+import { convertDiagramToExcalidraw } from '@/utils/diagramConverter'
 
 // 深色主题列表
 const DARK_THEMES = [
@@ -24,6 +26,7 @@ const STORAGE_KEY = 'excalidraw-data'
 // 暴露的方法接口
 export interface WhiteboardHandle {
   addRandomShape: () => void
+  addAIGeneratedDiagram: (diagram: SimplifiedDiagram) => void
 }
 
 export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
@@ -81,6 +84,27 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
           newElement as any,
         ],
       })
+    },
+    addAIGeneratedDiagram: (diagram: SimplifiedDiagram) => {
+      if (!excalidrawAPI.current) return
+
+      try {
+        // 转换简化格式为 Excalidraw 格式
+        const newElements = convertDiagramToExcalidraw(diagram)
+
+        // 添加到白板
+        excalidrawAPI.current.updateScene({
+          elements: [
+            ...excalidrawAPI.current.getSceneElements(),
+            ...newElements,
+          ],
+        })
+
+        // 可选：滚动到新内容
+        // excalidrawAPI.current.scrollToContent(newElements)
+      } catch (error) {
+        console.error('Failed to add AI generated diagram:', error)
+      }
     },
   }), [])
 
