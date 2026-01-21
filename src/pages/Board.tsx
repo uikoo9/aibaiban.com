@@ -3,7 +3,8 @@ import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { ChatPanel } from '@/components/Chat/ChatPanel'
 import { LoginModal } from '@/components/Auth/LoginModal'
 import { useAuth } from '@/hooks/useAuth'
-import { User, LogOut, Shapes } from 'lucide-react'
+import { User, LogOut } from 'lucide-react'
+// import { Shapes } from 'lucide-react' // 测试按钮需要时取消注释
 import type { WhiteboardHandle } from '@/components/Whiteboard'
 
 const Whiteboard = lazy(() => import('@/components/Whiteboard').then(m => ({ default: m.Whiteboard })))
@@ -13,9 +14,10 @@ function Board() {
   const { isAuthenticated, user, logout } = useAuth()
   const whiteboardRef = useRef<WhiteboardHandle>(null)
 
-  const handleAddRandomShape = () => {
-    whiteboardRef.current?.addRandomShape()
-  }
+  // 测试按钮需要时取消注释
+  // const handleAddRandomShape = () => {
+  //   whiteboardRef.current?.addRandomShape()
+  // }
 
   return (
     <div className="h-screen bg-base-100 flex flex-col">
