@@ -1,9 +1,20 @@
-import { useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import type { AuthState, User, LoginParams } from '@/types/auth'
 
 const STORAGE_KEY = 'auth-user'
 
-export function useAuth() {
+interface AuthContextType {
+  isAuthenticated: boolean
+  user: User | null
+  isLoading: boolean
+  login: (params: LoginParams) => Promise<User>
+  logout: () => void
+  sendVerificationCode: (phone: string) => Promise<boolean>
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
     isAuthenticated: false,
     user: null,
@@ -74,12 +85,26 @@ export function useAuth() {
     return true
   }, [])
 
-  return {
-    isAuthenticated: state.isAuthenticated,
-    user: state.user,
-    isLoading: state.isLoading,
-    login,
-    logout,
-    sendVerificationCode,
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
+        isLoading: state.isLoading,
+        login,
+        logout,
+        sendVerificationCode,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider')
   }
+  return context
 }

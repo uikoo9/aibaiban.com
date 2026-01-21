@@ -61,18 +61,18 @@ export function ThemeSwitcher() {
   return (
     <details ref={detailsRef} className="dropdown dropdown-end">
       <summary
-        className="btn btn-sm btn-ghost"
+        className="btn btn-ghost gap-2 h-10 min-h-10"
         aria-label="选择主题"
       >
         <Palette className="w-4 h-4" />
-        <span className="hidden sm:inline">主题</span>
+        <span className="hidden sm:inline text-sm font-medium">主题</span>
       </summary>
-      <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300 max-h-96 overflow-y-auto">
+      <ul className="dropdown-content menu bg-base-100 rounded-lg z-[1] w-52 p-2 shadow-xl border border-base-300 max-h-96 overflow-y-auto mt-3">
         {themes.map((theme) => (
           <li key={theme}>
             <button
               onClick={() => handleThemeChange(theme)}
-              className={`${currentTheme === theme ? 'active' : ''}`}
+              className={`${currentTheme === theme ? 'active' : ''} gap-2`}
             >
               <span className="capitalize flex-1">{theme}</span>
               {currentTheme === theme && (
