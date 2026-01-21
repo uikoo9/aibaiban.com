@@ -85,7 +85,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await sendVerificationCode(phone)
       setCountdown(60)
     } catch (err) {
-      setError('发送验证码失败，请重试')
+      // 显示具体的错误信息
+      const errorMessage = err instanceof Error ? err.message : '发送验证码失败，请重试'
+      setError(errorMessage)
     } finally {
       setIsSendingCode(false)
     }

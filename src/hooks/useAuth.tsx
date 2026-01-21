@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import type { AuthState, User, LoginParams } from '@/types/auth'
+import { sendSmsCode } from '@/services/auth'
 
 const STORAGE_KEY = 'auth-user'
 
@@ -75,14 +76,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  // Mock 发送验证码
+  // 发送验证码 - 使用真实 API
   const sendVerificationCode = useCallback(async (phone: string) => {
-    // 模拟 API 调用延迟
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    const response = await sendSmsCode(phone)
 
-    // Mock 成功（实际应该调用后端 API）
-    console.log('验证码已发送到:', phone)
-    return true
+    if (response.type === 'success') {
+      console.log('验证码已发送到:', phone)
+      return true
+    } else {
+      // 业务逻辑错误，抛出给调用方处理
+      throw new Error(response.msg || '发送验证码失败')
+    }
   }, [])
 
   return (
