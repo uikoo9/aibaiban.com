@@ -1,15 +1,21 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useState, useRef } from 'react'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { ChatPanel } from '@/components/Chat/ChatPanel'
 import { LoginModal } from '@/components/Auth/LoginModal'
 import { useAuth } from '@/hooks/useAuth'
-import { User, LogOut } from 'lucide-react'
+import { User, LogOut, Shapes } from 'lucide-react'
+import type { WhiteboardHandle } from '@/components/Whiteboard'
 
 const Whiteboard = lazy(() => import('@/components/Whiteboard').then(m => ({ default: m.Whiteboard })))
 
 function Board() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const { isAuthenticated, user, logout } = useAuth()
+  const whiteboardRef = useRef<WhiteboardHandle>(null)
+
+  const handleAddRandomShape = () => {
+    whiteboardRef.current?.addRandomShape()
+  }
 
   return (
     <div className="h-screen bg-base-100 flex flex-col">
@@ -26,6 +32,16 @@ function Board() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* 测试按钮 - 添加随机形状 (暂时隐藏) */}
+          {/* <button
+            onClick={handleAddRandomShape}
+            className="btn btn-ghost gap-2 h-10 min-h-10"
+            aria-label="添加随机形状"
+          >
+            <Shapes className="w-4 h-4" />
+            <span className="hidden sm:inline text-sm font-medium">测试形状</span>
+          </button> */}
+
           {/* 登录/用户信息 */}
           {isAuthenticated && user ? (
             <div className="dropdown dropdown-end">
@@ -36,7 +52,7 @@ function Board() {
                 aria-label="用户菜单"
               >
                 <div className="avatar placeholder">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 text-primary">
+                  <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center">
                     <User className="w-4 h-4" />
                   </div>
                 </div>
@@ -79,7 +95,7 @@ function Board() {
               </div>
             }
           >
-            <Whiteboard />
+            <Whiteboard ref={whiteboardRef} />
           </Suspense>
         </div>
 

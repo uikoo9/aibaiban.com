@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, forwardRef, useImperativeHandle } from 'react'
 import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
 
@@ -21,10 +21,68 @@ const DARK_THEMES = [
 
 const STORAGE_KEY = 'excalidraw-data'
 
-export function Whiteboard() {
+// 暴露的方法接口
+export interface WhiteboardHandle {
+  addRandomShape: () => void
+}
+
+export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const [initialData, setInitialData] = useState<any>(null)
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const excalidrawAPI = useRef<any>(null)
+
+  // 暴露给父组件的方法
+  useImperativeHandle(ref, () => ({
+    addRandomShape: () => {
+      if (!excalidrawAPI.current) return
+
+      const shapes = ['rectangle', 'ellipse', 'diamond'] as const
+      const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9']
+
+      const randomShape = shapes[Math.floor(Math.random() * shapes.length)]
+      const randomColor = colors[Math.floor(Math.random() * colors.length)]
+      const randomX = Math.random() * 800
+      const randomY = Math.random() * 600
+      const randomWidth = 100 + Math.random() * 150
+      const randomHeight = 100 + Math.random() * 150
+
+      const newElement = {
+        id: `shape-${Date.now()}-${Math.random()}`,
+        type: randomShape,
+        x: randomX,
+        y: randomY,
+        width: randomWidth,
+        height: randomHeight,
+        angle: 0,
+        strokeColor: randomColor,
+        backgroundColor: randomColor + '40',
+        fillStyle: 'solid',
+        strokeWidth: 2,
+        strokeStyle: 'solid',
+        roughness: 1,
+        opacity: 100,
+        groupIds: [],
+        frameId: null,
+        roundness: randomShape === 'rectangle' ? { type: 3 } : null,
+        seed: Math.floor(Math.random() * 2147483647),
+        version: 1,
+        versionNonce: Math.floor(Math.random() * 2147483647),
+        isDeleted: false,
+        boundElements: null,
+        updated: Date.now(),
+        link: null,
+        locked: false,
+      }
+
+      excalidrawAPI.current.updateScene({
+        elements: [
+          ...excalidrawAPI.current.getSceneElements(),
+          newElement as any,
+        ],
+      })
+    },
+  }), [])
 
   // 加载保存的数据
   useEffect(() => {
@@ -32,9 +90,30 @@ export function Whiteboard() {
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData)
-        setInitialData(parsed)
+        // 验证并过滤掉无效的元素
+        if (parsed.elements && Array.isArray(parsed.elements)) {
+          const validElements = parsed.elements.filter((el: any) => {
+            // 确保元素有必需的字段
+            return (
+              el.id &&
+              el.type &&
+              typeof el.x === 'number' &&
+              typeof el.y === 'number' &&
+              typeof el.width === 'number' &&
+              typeof el.height === 'number'
+            )
+          })
+          setInitialData({
+            ...parsed,
+            elements: validElements,
+          })
+        } else {
+          setInitialData(parsed)
+        }
       } catch (error) {
         console.error('Failed to load saved whiteboard data:', error)
+        // 清除损坏的数据
+        localStorage.removeItem(STORAGE_KEY)
       }
     }
   }, [])
@@ -140,6 +219,7 @@ export function Whiteboard() {
   return (
     <div className="w-full h-full">
       <Excalidraw
+        excalidrawAPI={(api) => (excalidrawAPI.current = api)}
         theme={theme}
         langCode="zh-CN"
         initialData={
@@ -153,5 +233,5 @@ export function Whiteboard() {
       />
     </div>
   )
-}
+})
 

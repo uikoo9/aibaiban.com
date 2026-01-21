@@ -112,7 +112,7 @@ export function ChatPanel() {
                 你好！我是 AI 助手
               </p>
               <p className="text-sm text-base-content/60 mb-4">
-                ��什么可以帮你的吗？
+                有什么可以帮你的吗？
               </p>
               {!isAuthenticated && (
                 <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
