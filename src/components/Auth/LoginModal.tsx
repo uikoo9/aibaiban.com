@@ -112,7 +112,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await login({ phone, code })
       handleClose()
     } catch (err) {
-      setError('登录失败，请重试')
+      // 显示具体的错误信息
+      const errorMessage = err instanceof Error ? err.message : '登录失败，请重试'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

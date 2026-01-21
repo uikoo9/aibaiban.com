@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react'
 import type { AuthState, User, LoginParams } from '@/types/auth'
-import { sendSmsCode } from '@/services/auth'
+import { sendSmsCode, loginWithSms } from '@/services/auth'
 
 const STORAGE_KEY = 'auth-user'
 
@@ -42,28 +42,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // Mock 登录 - 仅做 UI 展示，不做真实验证
+  // 登录 - 使用真实 API
   const login = useCallback(async (params: LoginParams) => {
-    // 模拟 API 调用延迟
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const response = await loginWithSms(params.phone, params.code)
 
-    // Mock 用户数据
-    const user: User = {
-      id: Date.now().toString(),
-      phone: params.phone,
-      nickname: `用户${params.phone.slice(-4)}`,
+    if (response.type === 'success' && response.obj) {
+      // 后端返回的数据结构：{ id, usertoken, usermobile }
+      // 转换为前端的 User 类型
+      const user: User = {
+        id: response.obj.id.toString(),
+        phone: response.obj.usermobile,
+        token: response.obj.usertoken,
+        nickname: `用户${response.obj.usermobile.slice(-4)}`,
+      }
+
+      // 保存到 localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
+
+      setState({
+        isAuthenticated: true,
+        user,
+        isLoading: false,
+      })
+
+      return user
+    } else {
+      // 业务逻辑错误，抛出给调用方处理
+      throw new Error(response.msg || '登录失败')
     }
-
-    // 保存到 localStorage
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
-
-    setState({
-      isAuthenticated: true,
-      user,
-      isLoading: false,
-    })
-
-    return user
   }, [])
 
   // 退出登录

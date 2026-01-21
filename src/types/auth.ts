@@ -1,6 +1,7 @@
 export interface User {
   id: string
   phone: string
+  token: string
   nickname?: string
   avatar?: string
 }
