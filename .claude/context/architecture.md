@@ -43,39 +43,54 @@
 
 ### 目录结构
 ```
-packages/web/
-├── index.html              # 入口 HTML
-├── vite.config.ts          # Vite 配置
-├── tsconfig.json           # TypeScript 配置
-├── src/
-│   ├── main.tsx           # 应用入口
-│   ├── App.tsx            # 根组件（路由配置）
-│   ├── lib/               # 工具函数
-│   │   └── utils.ts       # className 合并等工具
-│   ├── pages/             # 页面组件
-│   │   └── Board.tsx      # 白板页面
-│   ├── components/        # UI 组件（待添加）
-│   ├── hooks/             # 自定义 Hooks（待添加）
-│   └── api/               # API 调用（待添加）
+src/
+├── main.tsx           # 应用入口
+├── App.tsx            # 根组件（路由配置）
+├── index.css          # 全局样式（Tailwind CSS 导入）
+├── pages/             # 页面组件
+│   └── Board.tsx      # 白板页面（主页面，三栏布局）
+├── components/        # UI 组件
+│   ├── Auth/         # 认证组件
+│   │   └── LoginModal.tsx  # 登录模态框
+│   ├── Chat/         # 聊天面板组件
+│   │   ├── ChatPanel.tsx    # AI 助手面板
+│   │   └── MessageBubble.tsx # 消息气泡
+│   ├── Whiteboard.tsx        # 白板核心组件
+│   └── ThemeSwitcher.tsx     # 主题切换器
+├── hooks/            # 自定义 Hooks
+│   ├── useAuth.tsx   # 认证状态管理（Context API）
+│   └── useChat.ts    # 聊天功能
+├── services/         # API 服务层
+│   ├── api.ts        # 基础 API 封装（fetch wrapper）
+│   └── auth.ts       # 认证 API（短信、登录）
+├── types/            # TypeScript 类型定义
+│   ├── auth.ts       # 用户、登录相关类型
+│   ├── chat.ts       # 聊天消息类型
+│   ├── api.ts        # API 响应类型
+│   └── diagram.ts    # 图表类型（SimplifiedDiagram）
+├── utils/            # 工具函数
+│   └── diagramConverter.ts  # 图表格式转换器（SimplifiedDiagram → Excalidraw）
 └── ...
 ```
 
-### 页面布局架构
+### 页面布局架构（当前实现）
 ```
 ┌─────────────────────────────────────────────┐
-│ Header (h-14)                               │
-│  [Logo] AI白板  [标题输入]  [分享按钮]       │
+│ Header (h-16)                               │
+│  [Logo] AI白板  [AI生成] [登录] [主题] [GitHub] │
 ├─────────────────────────────────────────────┤
 │ Main Content (flex-1)                       │
 │  ┌──────────────────┬────────────────────┐ │
 │  │                  │                    │ │
-│  │  Canvas Area     │  AI Panel (w-80)   │ │
-│  │  (flex-1)        │                    │ │
-│  │                  │  - 标题栏 (h-14)   │ │
-│  │  Excalidraw      │  - 聊天内容区      │ │
+│  │  Canvas Area     │  AI Panel          │ │
+│  │  (flex-1)        │  (可调整宽度)      │ │
+│  │                  │  280px-600px       │ │
+│  │  Excalidraw      │  - 标题栏 (h-14)   │ │
+│  │                  │  - 消息列表        │ │
 │  │                  │  - 输入框          │ │
 │  │                  │                    │ │
 │  └──────────────────┴────────────────────┘ │
+│       ↑ 可拖动分隔条（resize handle）       │
 └─────────────────────────────────────────────┘
 ```
 
@@ -122,26 +137,54 @@ WebSocket 广播（实时协作）
 后端保存（定期）
 ```
 
-### AI 辅助流程（规划中）
+### AI 辅助流程（已实现）
 ```
-用户输入 Prompt
+用户点击"AI 生成"按钮
   ↓
-前端发送 API 请求
+显示演示模态框
   ↓
-后端调用 AI 模型
+模拟 AI 返回 SimplifiedDiagram (JSON)
+  {
+    type: "architecture",
+    title: "App 架构图",
+    nodes: [{id, label, type, color}, ...],
+    connections: [{from, to, label}, ...]
+  }
   ↓
-AI 返回生成数据（JSON）
+diagramConverter.convertDiagramToExcalidraw()
+  - 自动布局（网格布局，150px 间距）
+  - 颜色映射（6 种预定义颜色）
+  - 生成 Excalidraw 元素（形状、文字、箭头）
+  - 自动补全必需字段
   ↓
-前端解析并渲染到 Excalidraw
+whiteboard.addAIGeneratedDiagram(elements)
+  ↓
+Excalidraw updateScene() 渲染到白板
 ```
+
+**下一步**: 集成真实 AI API (Claude/GPT-4)
+- 用户在聊天面板输入需求
+- 发送到后端 AI 服务
+- AI 返回 SimplifiedDiagram JSON
+- 自动渲染到白板
 
 ## 模块划分
 
 ### 前端模块
 - **白板模块**：Excalidraw 集成和操作
+  - Whiteboard.tsx（forwardRef 暴露 API）
+  - addRandomShape()（测试方法）
+  - addAIGeneratedDiagram()（AI 生成图表）
 - **AI 模块**：AI 聊天和生成功能
+  - ChatPanel（聊天面板，Mock AI 回复）
+  - SimplifiedDiagram DSL（简化的图表格式）
+  - diagramConverter（格式转换器）
+- **认证模块**：用户登录和状态管理
+  - LoginModal（手机号 + 验证码）
+  - useAuth Hook（Context API）
+  - 真实 API 集成
 - **协作模块**：实时同步和多人协作（待实现）
-- **用户模块**：登录、注册、个人中心（待实现）
+- **用户模块**：个人中心（待实现）
 
 ### 后端模块（待定义）
 - **API 模块**：RESTful API
@@ -164,3 +207,7 @@ AI 返回生成数据（JSON）
 - 2026-01-16: 补充前端架构设计（Vite + React + Tailwind + shadcn/ui）
 - 2026-01-16: 补充页面布局架构和路由设计
 - 2026-01-19: 切换 UI 框架到 DaisyUI，更新技术栈
+- 2026-01-21: 更新目录结构（新增 types/diagram.ts、utils/diagramConverter.ts、services/、hooks/）
+- 2026-01-21: 更新 AI 辅助流程（SimplifiedDiagram DSL + 自动转换器实现）
+- 2026-01-21: 更新页面布局（可拖动调整聊天面板宽度）
+- 2026-01-21: 更新模块划分（补充白板 API、AI 图表生成、认证模块详情）

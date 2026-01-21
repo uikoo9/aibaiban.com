@@ -195,11 +195,25 @@ prds/                          # 产品需求文档
 
 src/                           # 前端应用源码
   ├── components/             # React 组件
-  │   └── Auth/              # 认证组件（登录等）
+  │   ├── Auth/              # 认证组件（登录模态框）
+  │   ├── Chat/              # 聊天面板组件
+  │   ├── Whiteboard.tsx     # 白板核心组件
+  │   └── ThemeSwitcher.tsx  # 主题切换器
   ├── pages/                  # 页面组件
+  │   └── Board.tsx          # 白板主页面
   ├── hooks/                  # 自定义 Hooks
-  ├── utils/                  # 工具函数
-  └── types/                  # TypeScript 类型定义
+  │   ├── useAuth.tsx        # 认证状态管理
+  │   └── useChat.ts         # 聊天功能
+  ├── services/               # API 服务层
+  │   ├── api.ts             # 基础 API 封装
+  │   └── auth.ts            # 认证 API
+  ├── types/                  # TypeScript 类型定义
+  │   ├── auth.ts            # 认证类型
+  │   ├── chat.ts            # 聊天类型
+  │   ├── api.ts             # API 响应类型
+  │   └── diagram.ts         # 图表类型（SimplifiedDiagram）
+  └── utils/                  # 工具函数
+      └── diagramConverter.ts # 图表格式转换器
 
 public/                        # 静态资源
 package.json                   # 项目配置
@@ -322,6 +336,6 @@ export all_proxy=socks5://127.0.0.1:7890
 
 ---
 
-**最后更新**: 2026-01-20
+**最后更新**: 2026-01-21
 **维护者**: Claude Code
-**版本**: 1.0.0
+**版本**: 1.0.1

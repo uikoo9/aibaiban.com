@@ -81,8 +81,17 @@
 待定义...
 
 ### AI 集成
-- 大模型接入：OpenAI / Anthropic Claude / ...
-- AI 功能：待规划
+- 大模型接入：OpenAI / Anthropic Claude / ...（待集成）
+- **SimplifiedDiagram DSL**（已实现）
+  - 简化的图表格式（nodes + connections）
+  - 易于 AI 输出的 JSON 结构
+  - 支持 3 种形状：rectangle, ellipse, diamond
+  - 支持 6 种颜色：blue, green, purple, orange, red, gray
+- **图表转换器**（已实现）
+  - diagramConverter.ts - 将 SimplifiedDiagram 转换为 Excalidraw 元素
+  - 自动布局算法（网格布局）
+  - 颜色映射和样式生成
+  - 必需字段自动补全
 
 ## 决策记录
 参考根目录 [技术选型.md](../../../docs/技术选型.md) 和 [decisions](../decisions/) 目录
@@ -101,3 +110,4 @@
 - 2026-01-20: 完善 PWA 资源和 SEO 优化
 - 2026-01-20: 配置 CDN 部署和环境区分
 - 2026-01-20: 切换包管理器从 pnpm 到 npm
+- 2026-01-21: 添加 SimplifiedDiagram DSL 和图表转换器（AI 生成图表功能）

@@ -78,10 +78,17 @@ aibaiban.com/
 │   │       └── MessageBubble.tsx     # 消息气泡组件
 │   ├── hooks/
 │   │   ├── useChat.ts                # 聊天逻辑 Hook
-│   │   └── useAuth.ts                # 认证逻辑 Hook
-│   └── types/
-│       ├── chat.ts                   # 聊天类型定义
-│       └── auth.ts                   # 认证类型定义
+│   │   └── useAuth.tsx               # 认证逻辑 Hook（Context API）
+│   ├── services/
+│   │   ├── api.ts                    # 基础 API 封装
+│   │   └── auth.ts                   # 认证 API（短信、登录）
+│   ├── types/
+│   │   ├── chat.ts                   # 聊天类型定义
+│   │   ├── auth.ts                   # 认证类型定义
+│   │   ├── api.ts                    # API 响应类型
+│   │   └── diagram.ts                # 图表类型（SimplifiedDiagram）
+│   └── utils/
+│       └── diagramConverter.ts       # 图表格式转换器
 ├── public/                           # 静态资源目录
 │   ├── logo.svg                      # 项目 Logo
 │   ├── favicon.ico                   # 网站图标
@@ -191,11 +198,14 @@ git commit -m "docs: 更新开发文档"
 - ✅ Excalidraw 白板集成（支持主题切换、本地存储）
 - ✅ DaisyUI 主题系统（32 个预设主题）
 - ✅ AI 聊天面板 UI（Mock 数据版本）
-- ✅ 手机号 + 验证码登录（Mock UI）
+- ✅ 手机号 + 验证码登录（真实 API 集成）
 - ✅ 登录状态持久化
 - ✅ 消息历史本地存储
 - ✅ UI/UX 设计规范文档
 - ✅ Header 品牌展示（Logo + 域名）
+- ✅ 白板代码调用功能（forwardRef API）
+- ✅ AI 生成图表功能（SimplifiedDiagram DSL + 自动转换器）
+- ✅ 聊天面板可拖动调整宽度（280px-600px）
 
 ## 路线图
 
@@ -219,9 +229,9 @@ git commit -m "docs: 更新开发文档"
 - [x] 创建产品概述文档
 - [x] 确定 MVP 功能范围
 - [x] 开发 AI 聊天面板 UI（Mock 版本）
-- [x] 开发登录功能 UI（Mock 版本）
-- [ ] 集成真实 AI API
-- [ ] 集成真实登录后端
+- [x] 开发登录功能 UI（已集成真实 API）
+- [x] 实现第一个 AI 功能（AI 生成图表演示）
+- [ ] 集成真实 AI 对话 API（Claude/GPT-4）
 - [ ] 设计核心用户流程
 - [ ] 细化功能 PRD
 
@@ -229,9 +239,12 @@ git commit -m "docs: 更新开发文档"
 - [x] 搭建前端基础框架
 - [x] 集成 Excalidraw
 - [x] 开发 AI 聊天面板 Mock 版本
-- [x] 开发登录功能 Mock 版本
-- [ ] 集成真实 AI API (OpenAI/Claude)
-- [ ] 实现第一个 AI 功能（生成流程图）
+- [x] 开发登录功能（已集成真实 API）
+- [x] 实现白板代码调用功能（forwardRef 暴露 API）
+- [x] 实现 AI 生成图表功能（SimplifiedDiagram DSL）
+- [x] 实现聊天面板可拖动调整宽度
+- [ ] 集成真实 AI 对话 API (OpenAI/Claude)
+- [ ] 将 AI 生成图表功能与聊天集成
 - [ ] 实现实时协作
 
 ## 许可证

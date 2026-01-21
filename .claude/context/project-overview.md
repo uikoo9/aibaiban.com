@@ -13,8 +13,10 @@ AI白板 ([aibaiban.com](https://aibaiban.com/))
 - [x] 用户认证（手机号+验证码登录，真实 API）
 - [x] AI 聊天面板 UI（Mock AI 回复，真实登录集成）
 - [x] 可拖动调整聊天面板宽度（280px-600px）
+- [x] 白板代码调用功能（forwardRef 暴露 API）
+- [x] AI 生成图表功能（SimplifiedDiagram DSL + 自动转换器）
 - [ ] AI 真实 API 集成
-- [ ] AI 辅助绘图
+- [ ] AI 辅助绘图（基于对话生成图表）
 - [ ] AI 智能识别和建议
 - [ ] 实时协作
 - [ ] 智能内容识别
@@ -41,6 +43,8 @@ AI白板 ([aibaiban.com](https://aibaiban.com/))
 - ✅ AI 聊天面板 Mock 版本（2026-01-19）
 - ✅ 用户认证集成真实 API（2026-01-21）
 - ✅ 聊天面板交互优化 + 可拖动调整宽度（2026-01-21）
+- ✅ 白板代码调用功能（forwardRef API 暴露）（2026-01-21）
+- ✅ AI 生成图表功能（SimplifiedDiagram DSL 设计与实现）（2026-01-21）
 
 ## 相关文档
 - [竞品调研](../../../docs/AI白板产品竞品调研.md)
@@ -55,3 +59,5 @@ AI白板 ([aibaiban.com](https://aibaiban.com/))
 - 2026-01-21: 集成真实短信验证码 API
 - 2026-01-21: 集成真实登录 API
 - 2026-01-21: 聊天面板交互优化 + 可拖动调整宽度功能
+- 2026-01-21: 白板组件添加代码调用功能（forwardRef + useImperativeHandle）
+- 2026-01-21: 实现 AI 生成图表功能（SimplifiedDiagram DSL + 自动转换器 + 演示模态框）
