@@ -26,7 +26,11 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         </div>
       </div>
       <div className={`chat-bubble text-sm ${isUser ? 'chat-bubble-primary' : ''}`}>
-        <div className="whitespace-pre-wrap break-words">{message.content}</div>
+        {message.content ? (
+          <div className="whitespace-pre-wrap break-words">{message.content}</div>
+        ) : (
+          <span className="loading loading-dots loading-sm"></span>
+        )}
       </div>
       <div className="chat-footer opacity-60 text-xs mt-1">
         {new Date(message.timestamp).toLocaleTimeString('zh-CN', {

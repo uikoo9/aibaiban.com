@@ -207,7 +207,7 @@ function Board() {
         </div>
       </header>
 
-      <div className="flex-1 flex">
+      <div className="flex-1 flex min-h-0">
         {/* 主白板区域 */}
         <div className="flex-1 bg-base-200 relative">
           <Suspense
@@ -243,7 +243,7 @@ function Board() {
 
         {/* 右侧 AI 助手面板 */}
         <aside
-          className="bg-base-100 border-l border-base-300 flex flex-col relative z-10"
+          className="flex flex-col overflow-hidden bg-base-100 border-l border-base-300 relative z-10"
           style={{ width: `${chatWidth}px` }}
         >
           <ChatPanel />

@@ -19,14 +19,6 @@ export function ChatPanel() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // 自动调整 textarea 高度
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = 'auto'
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`
-    }
-  }, [inputValue])
-
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading) return
 
@@ -36,8 +28,9 @@ export function ChatPanel() {
       return
     }
 
-    await sendMessage(inputValue)
+    const message = inputValue
     setInputValue('')
+    sendMessage(message)
     inputRef.current?.focus()
   }
 
@@ -66,7 +59,7 @@ export function ChatPanel() {
   return (
     <>
       {/* 标题栏 */}
-      <div className="h-16 border-b border-base-300 bg-gradient-to-b from-base-100 to-base-200 px-5 flex items-center justify-between shadow-sm">
+      <div className="h-16 border-b border-base-300 bg-gradient-to-b from-base-100 to-base-200 px-5 flex items-center justify-between shadow-sm flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
             <svg
@@ -106,7 +99,7 @@ export function ChatPanel() {
       </div>
 
       {/* 消息列表 */}
-      <div className="flex-1 overflow-y-auto px-5 py-6">
+      <div className="flex-1 min-h-0 overflow-y-auto px-5 py-6">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center max-w-xs">
@@ -145,35 +138,22 @@ export function ChatPanel() {
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
-            {isLoading && (
-              <div className="chat chat-start">
-                <div className="chat-image avatar placeholder">
-                  <div className="w-10 rounded-full bg-neutral text-neutral-content">
-                    <span className="text-xs font-medium">AI</span>
-                  </div>
-                </div>
-                <div className="chat-bubble">
-                  <span className="loading loading-dots loading-sm"></span>
-                </div>
-              </div>
-            )}
             <div ref={messagesEndRef} />
           </div>
         )}
       </div>
 
-      {/* 输入框 */}
-      <div className="p-5 border-t border-base-300 bg-base-100">
-        <div className="relative">
+      {/* 输入框 - 固定在底部，固定高度 */}
+      <div className="h-[200px] p-5 border-t border-base-300 bg-base-100 flex-shrink-0">
+        <div className="relative h-full">
           <textarea
             ref={inputRef}
             placeholder="输入你的需求..."
-            className="textarea textarea-bordered w-full text-base resize-none min-h-[88px] max-h-[200px] pr-24 pb-12"
+            className="textarea textarea-bordered w-full h-full text-base resize-none pr-24 pb-12"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
             disabled={isLoading}
-            rows={3}
           />
           {inputValue && (
             <button

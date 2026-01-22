@@ -75,6 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // 退出登录
   const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY)
+    // 清空聊天历史
+    localStorage.removeItem('chat-history')
     setState({
       isAuthenticated: false,
       user: null,
