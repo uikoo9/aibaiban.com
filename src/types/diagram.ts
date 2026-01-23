@@ -6,7 +6,7 @@
 export interface DiagramNode {
   id: string
   label: string
-  type?: 'rectangle' | 'ellipse' | 'diamond' | 'hexagon' | 'cylinder' | 'cloud'
+  type?: 'rectangle' | 'ellipse' | 'diamond'  // Excalidraw 支持的类型
   color?: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'gray' | 'yellow' | 'pink' | 'black'
   // 可选的位置和尺寸（不指定则自动布局）
   x?: number

@@ -8,12 +8,17 @@
 - [AI白板产品竞品调研.md](./AI白板产品竞品调研.md) - 市场竞品分析和功能对比
 
 ### 技术文档
+- [Excalidraw 绘图指南](./excalidraw-drawing-guide.md) ⭐ **必读** - 白板绘图核心机制深度解析
 - [技术选型.md](./技术选型.md) - 技术栈选择的详细分析和对比
 - [前端渲染方案选型.md](./前端渲染方案选型.md) - CSR/SSR/PWA 方案对比与决策
 - [TURBOREPO.md](./TURBOREPO.md) - Turborepo 构建工具使用指南
 - [开源白板项目选型.md](./开源白板项目选型.md) - 白板框架对比
 - [白板素材库对比.md](./白板素材库对比.md) - Excalidraw vs tldraw 素材库
 - [Excalidraw集成方案.md](./Excalidraw集成方案.md) - Excalidraw 引入方案分析
+
+### UI/UX 设计
+- [ui-ux-design-guide.md](./ui-ux-design-guide.md) - UI/UX 设计规范和色彩系统
+- [daisyui.md](./daisyui.md) - DaisyUI 组件库使用指南
 
 ### 开发规范
 - [GIT_COMMIT_GUIDELINES.md](./GIT_COMMIT_GUIDELINES.md) - Git 提交信息规范

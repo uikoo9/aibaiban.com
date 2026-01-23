@@ -4,9 +4,14 @@ import { useChat } from '@/hooks/useChat'
 import { useAuth } from '@/hooks/useAuth'
 import { MessageBubble } from './MessageBubble'
 import { LoginModal } from '../Auth/LoginModal'
+import type { SimplifiedDiagram } from '@/types/diagram'
 
-export function ChatPanel() {
-  const { messages, isLoading, sendMessage, clearMessages } = useChat()
+interface ChatPanelProps {
+  onDrawDiagram?: (diagram: SimplifiedDiagram) => void
+}
+
+export function ChatPanel({ onDrawDiagram }: ChatPanelProps) {
+  const { messages, isLoading, sendMessage, clearMessages } = useChat({ onDrawDiagram })
   const { isAuthenticated, user } = useAuth()
   const [inputValue, setInputValue] = useState('')
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)

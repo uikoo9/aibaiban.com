@@ -36,6 +36,7 @@
 - [技术栈详情](./.claude/context/tech-stack.md)
 - [架构设计](./.claude/context/architecture.md)
 - [产品需求](./prds/README.md)
+- [Excalidraw 绘图指南](./docs/excalidraw-drawing-guide.md) ⭐ 必读：白板绘图核心机制
 
 ---
 
@@ -255,6 +256,34 @@ git log --oneline -5 # 查看最近 5 条提交记录
 
 ### 文档同步规则
 **每次项目有实质性更新时，必须同步更新相关文档**。详见：[开发流程规范](./.claude/context/development-workflow.md#文档同步规则-重要)
+
+### Excalidraw 白板开发 ⭐
+**重要**：开发白板相关功能时，必须先阅读 [Excalidraw 绘图指南](./docs/excalidraw-drawing-guide.md)
+
+**核心要点**：
+1. **文字元素必需字段**：
+   ```typescript
+   {
+     lineHeight: 1.25 as any,    // ← 必须！fontFamily 1 对应的行高
+     originalText: text,         // ← 必须！原始文本
+     autoResize: true,           // ← 必须！自动调整大小
+   }
+   ```
+
+2. **容器绑定**（文字跟随形状）：
+   ```typescript
+   // 文字绑定到容器
+   textElement.containerId = shapeId;
+
+   // 容器引用文字
+   shapeElement.boundElements = [{ type: 'text', id: textId }];
+   ```
+
+3. **支持的形状类型**：
+   - ✅ rectangle、ellipse、diamond
+   - ❌ cylinder、hexagon、cloud（需映射到支持的类型）
+
+完整文档：[docs/excalidraw-drawing-guide.md](./docs/excalidraw-drawing-guide.md)
 
 ### 不要主动启动后台任务
 - ❌ 不要主动运行 `npm run dev`

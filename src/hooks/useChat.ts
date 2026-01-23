@@ -1,8 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Message, ChatState } from '@/types/chat'
+import type { SimplifiedDiagram } from '@/types/diagram'
 import { useAuth } from '@/hooks/useAuth'
 
 const STORAGE_KEY = 'chat-history'
+
+interface UseChatOptions {
+  onDrawDiagram?: (diagram: SimplifiedDiagram) => void
+}
 
 // 拒绝话术模板（多个随机选择）
 const REJECT_MESSAGES = [
@@ -94,7 +99,8 @@ async function streamText(
   }
 }
 
-export function useChat() {
+export function useChat(options?: UseChatOptions) {
+  const { onDrawDiagram } = options || {}
   const { isAuthenticated } = useAuth()
   const [state, setState] = useState<ChatState>({
     messages: [],
@@ -191,7 +197,7 @@ export function useChat() {
 
     try {
       // 调用非流式 AI API
-      const response = await fetch('https://aibaiban.com/chat', {
+      const response = await fetch('https://aibaiban.com/intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -229,17 +235,93 @@ export function useChat() {
           // 关闭加载状态
           setState((prev) => ({ ...prev, isLoading: false }))
         } else if (intent === 'DRAW') {
-          // 绘图意图，显示后端返回的设计说明
-          console.log('检测到绘图意图')
+          // 绘图意图，调用 /draw 接口生成图表
+          console.log('检测到绘图意图，准备调用 /draw 接口')
           const drawMessage = data.obj.content || data.obj.message || '正在为你设计图表...'
 
           // 延迟 300ms 让用户看到 loading 状态
           await new Promise((resolve) => setTimeout(resolve, 300))
 
-          // 流式显示设计说明（更新已存在的 AI 消息）
+          // 先流式显示设计说明
           await streamText(drawMessage, aiMessageId, setState, saveMessages)
 
-          // 关闭加载状态
+          // 调用 /draw 接口生成图表
+          try {
+            console.log('调用 /draw 接口，用户输入:', content.trim())
+            const drawResponse = await fetch('https://aibaiban.com/draw', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'userid': userId,
+                'usertoken': userToken,
+              },
+              body: JSON.stringify({
+                userPrompt: encodeURIComponent(content.trim()),
+              }),
+            })
+
+            if (!drawResponse.ok) {
+              throw new Error(`/draw 接口错误: ${drawResponse.status}`)
+            }
+
+            const drawData = await drawResponse.json()
+            console.log('/draw 接口响应:', drawData)
+
+            // 检查响应格式
+            if (drawData.type === 'success' && drawData.obj) {
+              const diagram: SimplifiedDiagram = drawData.obj
+
+              // 验证返回的数据是否是有效的 SimplifiedDiagram
+              if (diagram.type && diagram.nodes && diagram.connections) {
+                console.log('✅ 获取到有效的图表数据，准备渲染到白板')
+
+                // 调用回调函数，将图表渲染到白板
+                if (onDrawDiagram) {
+                  onDrawDiagram(diagram)
+
+                  // 在聊天中追加一条消息告知用户图表已生成
+                  const successMessageId = (Date.now() + 2).toString()
+                  const successMessage: Message = {
+                    id: successMessageId,
+                    role: 'assistant',
+                    content: '✅ 图表已生成到白板，你可以在左侧查看和编辑。',
+                    timestamp: Date.now(),
+                  }
+
+                  setState((prev) => {
+                    const newMessages = [...prev.messages, successMessage]
+                    saveMessages(newMessages)
+                    return { ...prev, messages: newMessages, isLoading: false }
+                  })
+                } else {
+                  console.warn('⚠️ onDrawDiagram 回调未定义，无法渲染图表')
+                }
+              } else {
+                throw new Error('返回的图表数据格式不正确')
+              }
+            } else {
+              throw new Error(drawData.msg || '/draw 接口返回格式错误')
+            }
+          } catch (drawError) {
+            console.error('❌ 调用 /draw 接口失败:', drawError)
+
+            // 在聊天中追加错误消息
+            const errorMessageId = (Date.now() + 2).toString()
+            const errorMessage: Message = {
+              id: errorMessageId,
+              role: 'assistant',
+              content: '抱歉，生成图表时出现了问题，请稍后重试。',
+              timestamp: Date.now(),
+            }
+
+            setState((prev) => {
+              const newMessages = [...prev.messages, errorMessage]
+              saveMessages(newMessages)
+              return { ...prev, messages: newMessages, isLoading: false }
+            })
+          }
+
+          // 关闭加载状态（如果前面没有关闭）
           setState((prev) => ({ ...prev, isLoading: false }))
         } else {
           // 未知意图，显示原始响应

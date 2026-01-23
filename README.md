@@ -107,6 +107,7 @@ aibaiban.com/
 │   └── 产品概述.md                   # 产品定位和规划
 ├── docs/                             # 技术文档
 │   ├── README.md                     # 文档索引
+│   ├── excalidraw-drawing-guide.md  # ⭐ Excalidraw 绘图核心机制（必读）
 │   ├── AI白板产品竞品调研.md         # 竞品分析
 │   ├── 技术选型.md                   # 技术选型分析
 │   ├── 开源白板项目选型.md           # 白板框架对比
@@ -160,6 +161,7 @@ npm run generate-icons
 - **决策记录**: 重要技术决策记录在 `.claude/decisions/`
 - **会话历史**: 开发过程详细记录在 `.claude/sessions/`
 - **开发规范**: ⚠️ **重要** - 查看 `.claude/context/development-workflow.md` 了解文档同步规则
+- **��板开发**: ⭐ **必读** - 开发白板功能前阅读 `docs/excalidraw-drawing-guide.md`
 
 ### Git 提交规范
 

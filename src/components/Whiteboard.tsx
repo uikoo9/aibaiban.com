@@ -91,17 +91,35 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
       try {
         // 转换简化格式为 Excalidraw 格式
         const newElements = convertDiagramToExcalidraw(diagram)
+        console.log('转换后的元素数量:', newElements.length)
+        console.log('元素类型分布:', newElements.reduce((acc, el) => {
+          acc[el.type] = (acc[el.type] || 0) + 1
+          return acc
+        }, {} as Record<string, number>))
 
-        // 添加到白板
+        // 获取现有元素
+        const existingElements = excalidrawAPI.current.getSceneElements()
+
+        // 添加新元素到白板
         excalidrawAPI.current.updateScene({
           elements: [
-            ...excalidrawAPI.current.getSceneElements(),
+            ...existingElements,
             ...newElements,
           ],
         })
 
-        // 可选：滚动到新内容
-        // excalidrawAPI.current.scrollToContent(newElements)
+        console.log('✅ 图表已添加到白板')
+
+        // 可选：滚动到新内容（延迟执行，等待渲染完成）
+        setTimeout(() => {
+          if (excalidrawAPI.current) {
+            // 获取新元素的边界，滚动到可视区域
+            excalidrawAPI.current.scrollToContent(newElements, {
+              fitToViewport: false,
+              animate: true,
+            })
+          }
+        }, 100)
       } catch (error) {
         console.error('Failed to add AI generated diagram:', error)
       }

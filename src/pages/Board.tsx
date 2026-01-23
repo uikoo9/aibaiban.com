@@ -87,6 +87,12 @@ function Board() {
   //   whiteboardRef.current?.addRandomShape()
   // }
 
+  // 处理 AI 生成的图表（从聊天区域调用）
+  const handleDrawDiagram = (diagram: SimplifiedDiagram) => {
+    console.log('📊 收到图表数据，准备渲染到白板:', diagram)
+    whiteboardRef.current?.addAIGeneratedDiagram(diagram)
+  }
+
   // 保存宽度到 LocalStorage
   useEffect(() => {
     localStorage.setItem(CHAT_WIDTH_STORAGE_KEY, String(chatWidth))
@@ -246,7 +252,7 @@ function Board() {
           className="flex flex-col overflow-hidden bg-base-100 border-l border-base-300 relative z-10"
           style={{ width: `${chatWidth}px` }}
         >
-          <ChatPanel />
+          <ChatPanel onDrawDiagram={handleDrawDiagram} />
         </aside>
       </div>
 
