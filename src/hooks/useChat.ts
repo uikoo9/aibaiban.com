@@ -173,20 +173,23 @@ export function useChat() {
       timestamp: Date.now(),
     }
 
-    // 添加用户消息
+    // 准备 AI 消息（初始为空，显示 loading）
+    const aiMessageId = (Date.now() + 1).toString()
+    const aiMessage: Message = {
+      id: aiMessageId,
+      role: 'assistant',
+      content: '', // 空内容会显示 loading dots
+      timestamp: Date.now(),
+    }
+
+    // 添加用户消息和 AI loading 消息，同时显示加载状态
     setState((prev) => {
-      const newMessages = [...prev.messages, userMessage]
+      const newMessages = [...prev.messages, userMessage, aiMessage]
       saveMessages(newMessages)
-      return { ...prev, messages: newMessages }
+      return { ...prev, messages: newMessages, isLoading: true }
     })
 
-    // 准备 AI 消息 ID（但不立即添加到消息列表）
-    const aiMessageId = (Date.now() + 1).toString()
-
     try {
-      // 显示加载状态
-      setState((prev) => ({ ...prev, isLoading: true }))
-
       // 调用非流式 AI API
       const response = await fetch('https://aibaiban.com/chat', {
         method: 'POST',
@@ -212,27 +215,15 @@ export function useChat() {
       if (data.type === 'success' && data.obj) {
         const { intent, reason } = data.obj
 
-        // 创建 AI 消息（初始为空，用于流式显示）
-        const aiMessage: Message = {
-          id: aiMessageId,
-          role: 'assistant',
-          content: '',
-          timestamp: Date.now(),
-        }
-
-        // 先添加空消息到列表
-        setState((prev) => {
-          const newMessages = [...prev.messages, aiMessage]
-          saveMessages(newMessages)
-          return { ...prev, messages: newMessages, isLoading: true }
-        })
-
         if (intent === 'REJECT') {
           // 非绘图意图，使用预设话术并流式显示
           console.log('检测到非绘图意图，原因:', reason)
           const rejectMessage = getRandomRejectMessage()
 
-          // 流式显示拒绝话术
+          // 延迟 300ms 让用户看到 loading 状态
+          await new Promise((resolve) => setTimeout(resolve, 300))
+
+          // 流式显示拒绝话术（更新已存在的 AI 消息）
           await streamText(rejectMessage, aiMessageId, setState, saveMessages)
 
           // 关闭加载状态
@@ -242,7 +233,10 @@ export function useChat() {
           console.log('检测到绘图意图')
           const drawMessage = data.obj.content || data.obj.message || '正在为你设计图表...'
 
-          // 流式显示设计说明
+          // 延迟 300ms 让用户看到 loading 状态
+          await new Promise((resolve) => setTimeout(resolve, 300))
+
+          // 流式显示设计说明（更新已存在的 AI 消息）
           await streamText(drawMessage, aiMessageId, setState, saveMessages)
 
           // 关闭加载状态
@@ -266,20 +260,17 @@ export function useChat() {
     } catch (error) {
       console.error('Failed to send message:', error)
 
-      // 创建错误消息
-      const errorMessage: Message = {
-        id: aiMessageId,
-        role: 'assistant',
-        content: '抱歉，发生了错误，请稍后重试。',
-        timestamp: Date.now(),
-      }
-
+      // 更新 AI 消息为错误内容
       setState((prev) => {
-        const newMessages = [...prev.messages, errorMessage]
-        saveMessages(newMessages)
+        const updatedMessages = prev.messages.map((msg) =>
+          msg.id === aiMessageId
+            ? { ...msg, content: '抱歉，发生了错误，请稍后重试。' }
+            : msg
+        )
+        saveMessages(updatedMessages)
         return {
           ...prev,
-          messages: newMessages,
+          messages: updatedMessages,
           isLoading: false,
           error: error instanceof Error ? error.message : '未知错误',
         }

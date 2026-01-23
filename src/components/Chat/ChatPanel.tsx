@@ -19,6 +19,13 @@ export function ChatPanel() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  // 当加载完成时，自动聚焦输入框
+  useEffect(() => {
+    if (!isLoading) {
+      inputRef.current?.focus()
+    }
+  }, [isLoading])
+
   const handleSend = async () => {
     if (!inputValue.trim() || isLoading) return
 
@@ -170,8 +177,17 @@ export function ChatPanel() {
             className="absolute right-2 bottom-2 btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
             title="发送 (Enter)"
           >
-            <Send className="w-4 h-4" />
-            <span className="text-xs">发送</span>
+            {isLoading ? (
+              <>
+                <span className="loading loading-spinner loading-xs"></span>
+                <span className="text-xs">发送中</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                <span className="text-xs">发送</span>
+              </>
+            )}
           </button>
         </div>
       </div>
