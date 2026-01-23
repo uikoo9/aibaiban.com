@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from '@/hooks/useAuth'
 import Board from './pages/Board'
+import Demo from './pages/Demo'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Board />} />
           <Route path="/board/:id" element={<Board />} />
+          <Route path="/demo" element={<Demo />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
