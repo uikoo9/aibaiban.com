@@ -189,7 +189,7 @@ git commit -m "docs: 更新开发文档"
 
 ## 项目状态
 
-🟢 **开发阶段** - 前端基础框架已完成，用户认证和 AI 聊天已集成真实 API，AI 意图识别功能已实现
+🟢 **开发阶段** - 前端基础框架已完成，AI 图表生成功能已完整实现并与聊天集成
 
 ### 已完成
 - ✅ 项目 Logo 设计（蓝色长方形白板 + AI 字样）
@@ -210,7 +210,13 @@ git commit -m "docs: 更新开发文档"
 - ✅ Header 品牌展示（Logo + 域名）
 - ✅ 白板代码调用功能（forwardRef API）
 - ✅ AI 生成图表功能（SimplifiedDiagram DSL + 自动转换器）
+- ✅ AI 图表生成与聊天完整集成（/intent + /draw API）
+- ✅ Excalidraw 文字渲染问题修复（必需字段 + 容器绑定）
+- ✅ Excalidraw 绘图指南文档（基于源码分析）
+- ✅ 智能箭头连接算法（自动选择最佳边）
 - ✅ 聊天面板可拖动调整宽度（280px-600px）
+- ✅ UI/UX Demo 页面（/demo 路由）
+- ✅ 移除测试按钮（代码清理）
 
 ## 路线图
 
@@ -237,7 +243,9 @@ git commit -m "docs: 更新开发文档"
 - [x] 开发登录功能 UI（已集成真实 API）
 - [x] 实现 AI 意图识别（绘图 vs 非绘图）
 - [x] 实现第一个 AI 功能（AI 生成图表演示）
-- [ ] 将 AI 生成图表功能与聊天集成
+- [x] 将 AI 生成图表功能与聊天集成
+- [x] 创建 Excalidraw 绘图指南文档
+- [x] 新增 UI/UX Demo 页面
 - [ ] 设计核心用户流程
 - [ ] 细化功能 PRD
 
@@ -250,7 +258,10 @@ git commit -m "docs: 更新开发文档"
 - [x] 实现白板代码调用功能（forwardRef 暴露 API）
 - [x] 实现 AI 生成图表功能（SimplifiedDiagram DSL）
 - [x] 实现聊天面板可拖动调整宽度
-- [ ] 将 AI 生成图表功能与聊天集成
+- [x] 将 AI 生成图表功能与聊天集成
+- [x] 修复 Excalidraw 文字渲染问题
+- [x] 实现智能箭头连接算法
+- [x] 创建 UI/UX Demo 页面
 - [ ] 实现实时协作
 
 ## 许可证
