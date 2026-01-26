@@ -12,6 +12,7 @@
 ✅ 已成为默认入口（路由: `/`）
 ✅ 完整的主题切换支持（浅色/深色）
 ✅ 优化的聊天体验（流式输出、自动滚动）
+✅ 按用户ID隔离数据（白板和聊天记录）
 
 ---
 
@@ -277,6 +278,15 @@ const bubbleItems = messages.map((msg) => ({
 5. **路由调整**
    - antd 版本成为默认入口（`/`）
    - 原 DaisyUI 版本保留为备份（`/legacy`）
+
+6. **数据隔离实现**
+   - 按用户ID隔离白板和聊天数据
+   - 未登录用户使用匿名存储
+   - 退出登录时清空显示但保留数据
+   - 登录后自动恢复用户数据
+   - 存储策略：
+     - 白板：`excalidraw-data-{userId}` / `excalidraw-data-anonymous`
+     - 聊天：`chat-history-{userId}` / `chat-history-anonymous`
 
 ### 技术挑战与解决方案
 
