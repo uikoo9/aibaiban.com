@@ -76,7 +76,7 @@ export function LoginModalAntd({ open, onClose }: LoginModalAntdProps) {
       footer={null}
       width={480}
       centered
-      destroyOnClose
+      destroyOnHidden
     >
       {/* 标题区域 */}
       <div style={{ textAlign: 'center', marginBottom: 32 }}>

@@ -2,12 +2,16 @@
 
 > 基于 antd + antd-x 重写的白板页面
 > 创建日期: 2026-01-26
+> 最后更新: 2026-01-26
 
 ---
 
 ## 🎉 已完成
 
 ✅ 所有组件已使用 antd + antd-x 重写完成
+✅ 已成为默认入口（路由: `/`）
+✅ 完整的主题切换支持（浅色/深色）
+✅ 优化的聊天体验（流式输出、自动滚动）
 
 ---
 
@@ -24,14 +28,18 @@
 2. **`src/components/Chat/ChatPanelAntd.tsx`**
    - 使用 `@ant-design/x` 的 `Bubble.List` 显示消息
    - 使用 `@ant-design/x` 的 `Sender` 作为输入框
-   - 使用 `@ant-design/x` 的 `Welcome` 和 `Prompts` 展示欢迎页
+   - 使用默认欢迎消息替代复杂的 Welcome 组件
    - 专业的 AI 聊天体验
+   - 用户消息右侧显示（蓝色填充）
+   - AI 消息左侧显示（边框样式）
+   - 圆形头像（用户图标/机器人图标）
 
 3. **`src/pages/BoardAntd.tsx`**
    - 主白板页面
    - 集成 `ConfigProvider` 和 `XProvider`
    - 使用 `antd` 的 Button、Dropdown、Avatar 等组件
    - 保留可拖动调整聊天面板宽度功能
+   - 主题切换按钮集成在 header 右侧
 
 ---
 
@@ -43,14 +51,18 @@
 # 启动开发服务器
 npm run dev
 
-# 访问新版本页面
-http://localhost:5173/antd
+# 访问默认页面（antd 版本）
+http://localhost:5173/
+
+# 访问原版本（DaisyUI）
+http://localhost:5173/legacy
 ```
 
 ### 生产环境
 
 ```
-https://yourdomain.com/antd
+https://aibaiban.com/         # antd 版本（默认）
+https://aibaiban.com/legacy   # 原版本（备份）
 ```
 
 ---
@@ -220,11 +232,6 @@ const bubbleItems = messages.map((msg) => ({
    - 支持文件上传
    - 图片预览
 
-4. **主题定制**
-   - 完整的主题切换
-   - 暗色模式优化
-   - 自定义主题色
-
 ---
 
 ## 📝 开发笔记
@@ -244,19 +251,60 @@ const bubbleItems = messages.map((msg) => ({
    - 活跃的社区维护
    - 丰富的文档和示例
 
-### 主要挑战
+### 主要优化（2026-01-26）
 
-1. **样式迁移**
-   - 从 DaisyUI 迁移到 antd
-   - 保持一致的视觉风格
+1. **主题切换完善**
+   - 修复了深色模式不生效的问题
+   - 通过组件重构，确保 `useToken()` 在 ConfigProvider 内部调用
+   - 主题切换按钮集成在 header 右侧，与其他按钮保持一致
 
-2. **组件 API 差异**
-   - DaisyUI 基于 CSS 类
-   - antd 基于 React Props
+2. **聊天体验优化**
+   - 用户消息正确显示在右侧（蓝色填充）
+   - AI 消息正确显示在左侧（边框样式）
+   - 添加了清晰的圆形头像（Avatar 组件）
+   - 统一头像背景色为蓝色
 
-3. **包体积增加**
-   - 从 ~10KB (DaisyUI) 到 ~500KB (antd)
-   - 但换来更强大的功能
+3. **自动滚动修复**
+   - 使用 `scrollTop = scrollHeight` 替代 `scrollIntoView`
+   - 新消息自动定位到底部
+   - 流式输出期间保持滚动
+
+4. **简化初始状态**
+   - 移除复杂的 Welcome 组件
+   - 使用默认欢迎消息（在 useChat hook 中定义）
+   - 更简洁友好的初始体验
+
+5. **路由调整**
+   - antd 版本成为默认入口（`/`）
+   - 原 DaisyUI 版本保留为备份（`/legacy`）
+
+### 技术挑战与解决方案
+
+1. **主题切换问题**
+   - 挑战：直接在组件中使用 `useToken()` 无法获取正确的主题值
+   - 解决：将组件拆分为外层（管理主题状态）和内层（使用主题 token）
+   ```tsx
+   // 外层组件管理主题状态
+   function BoardAntd() {
+     const [currentTheme, setCurrentTheme] = useState('light')
+     return (
+       <ConfigProvider theme={{ algorithm: ... }}>
+         <BoardContent /> {/* 内层组件可以使用 useToken() */}
+       </ConfigProvider>
+     )
+   }
+   ```
+
+2. **消息位置问题**
+   - 挑战：Bubble.List 的 role 配置不生效
+   - 解决：在每个消息对象中直接指定 `placement` 和 `variant` 属性
+
+3. **头像显示问题**
+   - 挑战：avatar 对象格式导致 React 渲染错误
+   - 解决：直接传递 Avatar 组件作为 avatar 值
+   ```tsx
+   avatar: <Avatar style={{ background: color }} icon={<Icon />} />
+   ```
 
 ---
 
@@ -271,5 +319,6 @@ const bubbleItems = messages.map((msg) => ({
 ---
 
 **创建日期**: 2026-01-26
+**最后更新**: 2026-01-26
 **作者**: Claude Code
-**版本**: 1.0.0
+**版本**: 2.0.0 ✨ (现已成为默认版本)

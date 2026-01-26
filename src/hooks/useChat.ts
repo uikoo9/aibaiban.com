@@ -5,6 +5,14 @@ import { useAuth } from '@/hooks/useAuth'
 
 const STORAGE_KEY = 'chat-history'
 
+// 默认欢迎消息
+const DEFAULT_WELCOME_MESSAGE: Message = {
+  id: 'welcome',
+  role: 'assistant',
+  content: '你好！我是 AI 白板助手，可以帮你绘制流程图、架构图、思维导图等各种图表。\n\n试试对我说：\n• "画一个用户登录流程图"\n• "设计一个微服务架构"\n• "用思维导图展示项目计划"',
+  timestamp: Date.now(),
+}
+
 interface UseChatOptions {
   onDrawDiagram?: (diagram: SimplifiedDiagram) => void
 }
@@ -117,7 +125,12 @@ export function useChat(options?: UseChatOptions) {
         setState((prev) => ({ ...prev, messages }))
       } catch (error) {
         console.error('Failed to load chat history:', error)
+        // 如果加载失败，使用默认欢迎消息
+        setState((prev) => ({ ...prev, messages: [DEFAULT_WELCOME_MESSAGE] }))
       }
+    } else {
+      // 没有历史消息时，显��默认欢迎消息
+      setState((prev) => ({ ...prev, messages: [DEFAULT_WELCOME_MESSAGE] }))
     }
   }, [])
 
@@ -129,7 +142,7 @@ export function useChat(options?: UseChatOptions) {
     // 只在从已登录变为未登录时清空（真正的退出登录）
     if (prevAuthRef.current === true && !isAuthenticated) {
       setState({
-        messages: [],
+        messages: [DEFAULT_WELCOME_MESSAGE],
         isLoading: false,
         error: null,
       })
@@ -362,7 +375,7 @@ export function useChat(options?: UseChatOptions) {
 
   // 清空对话
   const clearMessages = useCallback(() => {
-    setState({ messages: [], isLoading: false, error: null })
+    setState({ messages: [DEFAULT_WELCOME_MESSAGE], isLoading: false, error: null })
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 

@@ -1,12 +1,10 @@
 import { useRef, useEffect, useState } from 'react'
-import { Button, Modal } from 'antd'
-import { Bubble, Sender, Welcome, Prompts } from '@ant-design/x'
+import { Button, Modal, theme, Avatar } from 'antd'
+import { Bubble, Sender } from '@ant-design/x'
 import {
   DeleteOutlined,
   RobotOutlined,
-  FileTextOutlined,
-  AppstoreOutlined,
-  BulbOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 import { useChat } from '@/hooks/useChat'
 import { useAuth } from '@/hooks/useAuth'
@@ -23,11 +21,15 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
   const [inputValue, setInputValue] = useState('')
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const { token: themeToken } = theme.useToken() // 获取当前主题的 token
 
   // 自动滚动到底部
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
+  }, [messages, isLoading])
 
   const handleSend = async (value: string) => {
     if (!value.trim() || isLoading) return
@@ -43,8 +45,6 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
   }
 
   const handleClear = () => {
-    if (messages.length === 0) return
-
     Modal.confirm({
       title: '清空对话',
       content: '确定要清空所有对话吗？此操作无法撤销。',
@@ -58,34 +58,28 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
   }
 
   // 转换消息格式为 antd-x 所需格式
-  const bubbleItems = messages.map((msg) => ({
-    key: msg.id,
-    content: msg.content,
-    role: msg.role,
-    loading: msg.role === 'assistant' && isLoading && msg.id === messages[messages.length - 1]?.id,
-  }))
+  const bubbleItems = messages.map((msg) => {
+    const isAssistant = msg.role === 'assistant'
+    const isLastAssistantMessage = isAssistant && msg.id === messages[messages.length - 1]?.id
+    const isTyping = isAssistant && isLoading && isLastAssistantMessage && msg.content.length > 0
 
-  // 快速提示词
-  const promptItems = [
-    {
-      key: '1',
-      label: '生成流程图',
-      icon: <FileTextOutlined />,
-      description: '根据描述生成流程图',
-    },
-    {
-      key: '2',
-      label: '生成架构图',
-      icon: <AppstoreOutlined />,
-      description: '创建系统架构图',
-    },
-    {
-      key: '3',
-      label: '生成思维导图',
-      icon: <BulbOutlined />,
-      description: '整理思路和想法',
-    },
-  ]
+    return {
+      key: msg.id,
+      content: msg.content,
+      variant: msg.role === 'user' ? 'filled' : 'outlined',
+      placement: msg.role === 'user' ? 'end' : 'start',
+      avatar: msg.role === 'user'
+        ? <Avatar style={{ background: themeToken.colorPrimary }} icon={<UserOutlined />} />
+        : <Avatar style={{ background: themeToken.colorPrimary }} icon={<RobotOutlined />} />,
+      loading: isAssistant && isLoading && isLastAssistantMessage && msg.content.length === 0,
+      typing: isTyping,
+      styles: {
+        content: msg.role === 'user'
+          ? { background: themeToken.colorPrimary, color: '#fff' }
+          : { background: themeToken.colorBgContainer, color: themeToken.colorText },
+      },
+    }
+  })
 
   return (
     <>
@@ -93,12 +87,12 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
       <div
         style={{
           height: 64,
-          borderBottom: '1px solid #f0f0f0',
+          borderBottom: `1px solid ${themeToken.colorBorder}`,
           padding: '0 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: 'linear-gradient(to bottom, #fff, #fafafa)',
+          background: themeToken.colorBgContainer,
           boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
         }}
       >
@@ -114,18 +108,20 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
               justifyContent: 'center',
             }}
           >
-            <RobotOutlined style={{ fontSize: 20, color: '#1677ff' }} />
+            <RobotOutlined style={{ fontSize: 20, color: themeToken.colorPrimary }} />
           </div>
           <div>
-            <div style={{ fontWeight: 'bold', fontSize: 16 }}>AI 助手</div>
+            <div style={{ fontWeight: 'bold', fontSize: 16, color: themeToken.colorText }}>
+              AI 助手
+            </div>
             {isAuthenticated && user && (
-              <div style={{ fontSize: 12, color: 'rgba(0, 0, 0, 0.45)' }}>
+              <div style={{ fontSize: 12, color: themeToken.colorTextSecondary }}>
                 {user.nickname || user.phone}
               </div>
             )}
           </div>
         </div>
-        {messages.length > 0 && (
+        {messages.length > 1 && (
           <Button
             type="text"
             icon={<DeleteOutlined />}
@@ -136,66 +132,17 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
       </div>
 
       {/* 消息列表 */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px' }}>
-        {messages.length === 0 ? (
-          <Welcome
-            icon={<RobotOutlined style={{ fontSize: 48, color: '#1677ff' }} />}
-            title="你好！我是 AI 助手"
-            description="有什么可以帮你的吗？"
-            extra={
-              <>
-                {!isAuthenticated && (
-                  <div
-                    style={{
-                      padding: 16,
-                      background: 'rgba(22, 119, 255, 0.05)',
-                      borderRadius: 8,
-                      border: '1px solid rgba(22, 119, 255, 0.2)',
-                      marginBottom: 16,
-                    }}
-                  >
-                    <span style={{ color: '#1677ff', fontWeight: 500 }}>
-                      💡 发送消息前需要先登录
-                    </span>
-                  </div>
-                )}
-                <Prompts
-                  items={promptItems}
-                  onSelect={(item) => handleSend(item.label as string)}
-                  style={{ marginTop: 16 }}
-                />
-              </>
-            }
-          />
-        ) : (
-          <>
-            <Bubble.List
-              items={bubbleItems}
-              roles={{
-                user: {
-                  placement: 'end',
-                  variant: 'filled',
-                  avatar: { icon: '👤', style: { background: '#1677ff' } },
-                },
-                assistant: {
-                  placement: 'start',
-                  variant: 'outlined',
-                  typing: isLoading,
-                  avatar: { icon: '🤖' },
-                },
-              }}
-            />
-            <div ref={messagesEndRef} />
-          </>
-        )}
+      <div ref={messagesContainerRef} style={{ flex: 1, overflowY: 'auto', padding: '24px 20px' }}>
+        <Bubble.List items={bubbleItems} />
+        <div ref={messagesEndRef} />
       </div>
 
       {/* 输入框 */}
       <div
         style={{
-          borderTop: '1px solid #f0f0f0',
+          borderTop: `1px solid ${themeToken.colorBorder}`,
           padding: 16,
-          background: '#fff',
+          background: themeToken.colorBgContainer,
         }}
       >
         <Sender

@@ -9,9 +9,9 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Board />} />
+          <Route path="/" element={<BoardAntd />} />
+          <Route path="/legacy" element={<Board />} />
           <Route path="/board/:id" element={<Board />} />
-          <Route path="/antd" element={<BoardAntd />} />
           <Route path="/demo" element={<Demo />} />
         </Routes>
       </BrowserRouter>

@@ -117,9 +117,17 @@
 - 2026-01-20: 配置 CDN 部署和环境区分
 - 2026-01-20: 切换包管理器从 pnpm 到 npm
 - 2026-01-21: 添加 SimplifiedDiagram DSL 和图表转换器（AI 生成图表功能）
-- **2026-01-26**: 添加 Ant Design + Ant Design X 企业级 UI 版本（路由: `/antd`）⭐
+- **2026-01-26**: 添加 Ant Design + Ant Design X 企业级 UI 版本⭐
   - 安装 antd 5.22.5, @ant-design/x 1.1.1, @ant-design/icons 5.5.3
   - 创建 LoginModalAntd, ChatPanelAntd, BoardAntd 组件
-  - 企业级 AI 聊天体验（流式渲染、打字效果、Welcome + Prompts）
+  - 企业级 AI 聊天体验（流式渲染、打字效果、圆形头像）
   - 完整的技术文档（架构分析、组件指南、迁移分析）
+  - **已成为默认版本**（路由: `/`），原版本移至 `/legacy`
+- **2026-01-26**: 优化 Ant Design 版本体验
+  - 修复主题切换问题（深色模式完整支持）
+  - 优化聊天消息显示（用户右侧、AI 左侧）
+  - 添加圆形头像（Avatar 组件）
+  - 简化初始状态（默认欢迎消息）
+  - 修复自动滚动到底部
+  - 统一头像背景色为蓝色
 
