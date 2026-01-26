@@ -65,9 +65,10 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
 
     return {
       key: msg.id,
+      role: msg.role,
       content: msg.content,
-      variant: msg.role === 'user' ? 'filled' : 'outlined',
-      placement: msg.role === 'user' ? 'end' : 'start',
+      variant: (msg.role === 'user' ? 'filled' : 'outlined') as 'filled' | 'outlined',
+      placement: (msg.role === 'user' ? 'end' : 'start') as 'end' | 'start',
       avatar: msg.role === 'user'
         ? <Avatar style={{ background: themeToken.colorPrimary }} icon={<UserOutlined />} />
         : <Avatar style={{ background: themeToken.colorPrimary }} icon={<RobotOutlined />} />,
