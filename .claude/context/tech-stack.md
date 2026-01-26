@@ -25,9 +25,15 @@
 - **构建工具**: Vite 7.3.1（已确定 - ADR 005）
 - **框架**: React 19.2.3 + TypeScript 5.9.3（已确定）
 - **路由**: React Router 7.12.0（已确定）
-- **样式方案**: Tailwind CSS v4（已确定 - ADR 005，ADR 007）
-- **组件库**: DaisyUI 5.5.14（已确定 - ADR 007）
-- **图标库**: lucide-react 0.562.0
+- **样式方案**:
+  - Tailwind CSS v4（已确定 - ADR 005，ADR 007）
+  - **新增**: Ant Design 5.22.5（企业级 UI 组件库）
+- **组件库**:
+  - DaisyUI 5.5.14（原版本 - 路由: `/`）
+  - **新增**: Ant Design 5.22.5 + Ant Design X 1.1.1（新版本 - 路由: `/antd`）⭐
+- **图标库**:
+  - lucide-react 0.562.0（原版本）
+  - **新增**: @ant-design/icons 5.5.3（新版本）
 - **工具库**: clsx, tailwind-merge, class-variance-authority
 - **状态管理**: 待按需引入（规划 Zustand）
 
@@ -111,3 +117,9 @@
 - 2026-01-20: 配置 CDN 部署和环境区分
 - 2026-01-20: 切换包管理器从 pnpm 到 npm
 - 2026-01-21: 添加 SimplifiedDiagram DSL 和图表转换器（AI 生成图表功能）
+- **2026-01-26**: 添加 Ant Design + Ant Design X 企业级 UI 版本（路由: `/antd`）⭐
+  - 安装 antd 5.22.5, @ant-design/x 1.1.1, @ant-design/icons 5.5.3
+  - 创建 LoginModalAntd, ChatPanelAntd, BoardAntd 组件
+  - 企业级 AI 聊天体验（流式渲染、打字效果、Welcome + Prompts）
+  - 完整的技术文档（架构分析、组件指南、迁移分析）
+
