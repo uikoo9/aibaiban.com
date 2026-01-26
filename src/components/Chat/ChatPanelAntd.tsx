@@ -16,8 +16,11 @@ interface ChatPanelAntdProps {
 }
 
 export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
-  const { messages, isLoading, sendMessage, clearMessages } = useChat({ onDrawDiagram })
   const { isAuthenticated, user } = useAuth()
+  const { messages, isLoading, sendMessage, clearMessages } = useChat({
+    onDrawDiagram,
+    userId: user?.id,
+  })
   const [inputValue, setInputValue] = useState('')
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -98,19 +101,11 @@ export function ChatPanelAntd({ onDrawDiagram }: ChatPanelAntdProps) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 8,
-              background: 'rgba(22, 119, 255, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <RobotOutlined style={{ fontSize: 20, color: themeToken.colorPrimary }} />
-          </div>
+          <Avatar
+            size={40}
+            style={{ background: themeToken.colorPrimary }}
+            icon={<RobotOutlined />}
+          />
           <div>
             <div style={{ fontWeight: 'bold', fontSize: 16, color: themeToken.colorText }}>
               AI 助手

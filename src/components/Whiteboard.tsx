@@ -21,19 +21,36 @@ const DARK_THEMES = [
   'dim',
 ]
 
-const STORAGE_KEY = 'excalidraw-data'
+const STORAGE_KEY_PREFIX = 'excalidraw-data'
 
 // 暴露的方法接口
 export interface WhiteboardHandle {
   addRandomShape: () => void
   addAIGeneratedDiagram: (diagram: SimplifiedDiagram) => void
+  clearWhiteboard: () => void
 }
 
-export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
+interface WhiteboardProps {
+  userId?: string // 用户ID，用于区分不同用户的数据
+}
+
+export const Whiteboard = forwardRef<WhiteboardHandle, WhiteboardProps>(({ userId }, ref) => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const [initialData, setInitialData] = useState<any>(null)
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const excalidrawAPI = useRef<any>(null)
+
+  // 打印userId变化
+  useEffect(() => {
+    console.log('[Whiteboard] userId changed:', userId)
+  }, [userId])
+
+  // 获取存储key（根据用户ID）
+  const getStorageKey = useCallback(() => {
+    const key = userId ? `${STORAGE_KEY_PREFIX}-${userId}` : `${STORAGE_KEY_PREFIX}-anonymous`
+    console.log('[Whiteboard] Storage key:', key, 'userId:', userId)
+    return key
+  }, [userId])
 
   // 暴露给父组件的方法
   useImperativeHandle(ref, () => ({
@@ -124,11 +141,23 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
         console.error('Failed to add AI generated diagram:', error)
       }
     },
-  }), [])
+    clearWhiteboard: () => {
+      if (!excalidrawAPI.current) return
 
-  // 加载保存的数据
+      // 只清空白板显示，不删除localStorage中的数据
+      excalidrawAPI.current.updateScene({
+        elements: [],
+      })
+
+      console.log('✅ 白板已清空（仅清空显示）')
+    },
+  }), [getStorageKey])
+
+  // 加载保存的数据（根据用户ID）
   useEffect(() => {
-    const savedData = localStorage.getItem(STORAGE_KEY)
+    const storageKey = getStorageKey()
+    const savedData = localStorage.getItem(storageKey)
+    console.log('[Whiteboard] Loading data from:', storageKey, 'found:', !!savedData)
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData)
@@ -145,20 +174,42 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
               typeof el.height === 'number'
             )
           })
-          setInitialData({
+          const dataToLoad = {
             ...parsed,
             elements: validElements,
-          })
+          }
+          console.log('[Whiteboard] Loading data, elements count:', validElements.length, 'API ready:', !!excalidrawAPI.current)
+          setInitialData(dataToLoad)
+          // 如果Excalidraw API已经初始化，直接更新场景
+          if (excalidrawAPI.current) {
+            excalidrawAPI.current.updateScene(dataToLoad)
+            console.log('[Whiteboard] Updated scene via API')
+          }
         } else {
+          console.log('[Whiteboard] Loading data (no validation)')
           setInitialData(parsed)
+          if (excalidrawAPI.current) {
+            excalidrawAPI.current.updateScene(parsed)
+            console.log('[Whiteboard] Updated scene via API')
+          }
         }
       } catch (error) {
         console.error('Failed to load saved whiteboard data:', error)
         // 清除损坏的数据
-        localStorage.removeItem(STORAGE_KEY)
+        localStorage.removeItem(storageKey)
+      }
+    } else {
+      // 如果没有保存的数据，设置为空数据
+      console.log('[Whiteboard] No saved data, using empty data')
+      const emptyData = { elements: [], appState: {} }
+      setInitialData(emptyData)
+      // 如果Excalidraw API已经初始化，也要清空场景
+      if (excalidrawAPI.current) {
+        excalidrawAPI.current.updateScene(emptyData)
+        console.log('[Whiteboard] Cleared scene via API')
       }
     }
-  }, [])
+  }, [getStorageKey])
 
   // 检测主题
   useEffect(() => {
@@ -186,7 +237,7 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
     return () => observer.disconnect()
   }, [])
 
-  // 保存数据（正确的防抖实现）
+  // 保存数据（正确的防抖实现，根据用户ID）
   const handleChange = useCallback((elements: readonly any[], appState: any) => {
     // 清除之前的 timeout
     if (saveTimeoutRef.current) {
@@ -195,6 +246,7 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
 
     // 设置新的 timeout
     saveTimeoutRef.current = setTimeout(() => {
+      const storageKey = getStorageKey()
       const dataToSave = {
         elements,
         appState: {
@@ -203,9 +255,10 @@ export const Whiteboard = forwardRef<WhiteboardHandle>((_props, ref) => {
           // 只保存必要的状态
         },
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave))
+      localStorage.setItem(storageKey, JSON.stringify(dataToSave))
+      console.log('[Whiteboard] Saved data to:', storageKey, 'elements count:', elements.length)
     }, 1000)
-  }, [])
+  }, [getStorageKey])
 
   // 清理 timeout
   useEffect(() => {

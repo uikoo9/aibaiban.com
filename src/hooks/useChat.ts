@@ -3,7 +3,7 @@ import type { Message, ChatState } from '@/types/chat'
 import type { SimplifiedDiagram } from '@/types/diagram'
 import { useAuth } from '@/hooks/useAuth'
 
-const STORAGE_KEY = 'chat-history'
+const STORAGE_KEY_PREFIX = 'chat-history'
 
 // 默认欢迎消息
 const DEFAULT_WELCOME_MESSAGE: Message = {
@@ -15,6 +15,7 @@ const DEFAULT_WELCOME_MESSAGE: Message = {
 
 interface UseChatOptions {
   onDrawDiagram?: (diagram: SimplifiedDiagram) => void
+  userId?: string // 用户ID，用于区分不同用户的数据
 }
 
 // 拒绝话术模板（多个随机选择）
@@ -108,7 +109,7 @@ async function streamText(
 }
 
 export function useChat(options?: UseChatOptions) {
-  const { onDrawDiagram } = options || {}
+  const { onDrawDiagram, userId } = options || {}
   const { isAuthenticated } = useAuth()
   const [state, setState] = useState<ChatState>({
     messages: [],
@@ -116,9 +117,18 @@ export function useChat(options?: UseChatOptions) {
     error: null,
   })
 
+  // 获取存储key（根据用户ID）
+  const getStorageKey = useCallback(() => {
+    const key = userId ? `${STORAGE_KEY_PREFIX}-${userId}` : `${STORAGE_KEY_PREFIX}-anonymous`
+    console.log('[useChat] Storage key:', key, 'userId:', userId)
+    return key
+  }, [userId])
+
   // 加载历史消息
   useEffect(() => {
-    const savedHistory = localStorage.getItem(STORAGE_KEY)
+    const storageKey = getStorageKey()
+    const savedHistory = localStorage.getItem(storageKey)
+    console.log('[useChat] Loading history from:', storageKey, 'found:', !!savedHistory)
     if (savedHistory) {
       try {
         const messages = JSON.parse(savedHistory)
@@ -132,7 +142,7 @@ export function useChat(options?: UseChatOptions) {
       // 没有历史消息时，显��默认欢迎消息
       setState((prev) => ({ ...prev, messages: [DEFAULT_WELCOME_MESSAGE] }))
     }
-  }, [])
+  }, [getStorageKey])
 
   // 监听登录状态变化，退出登录时清空消息
   // 注意：使用 ref 来跟踪上一次的认证状态，避免页面刷新时误清空
@@ -146,15 +156,17 @@ export function useChat(options?: UseChatOptions) {
         isLoading: false,
         error: null,
       })
-      localStorage.removeItem(STORAGE_KEY)
+      const storageKey = getStorageKey()
+      localStorage.removeItem(storageKey)
     }
     prevAuthRef.current = isAuthenticated
-  }, [isAuthenticated])
+  }, [isAuthenticated, getStorageKey])
 
-  // 保存消息到 localStorage
+  // 保存消息到 localStorage（根据用户ID）
   const saveMessages = useCallback((messages: Message[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
-  }, [])
+    const storageKey = getStorageKey()
+    localStorage.setItem(storageKey, JSON.stringify(messages))
+  }, [getStorageKey])
 
   // 发送消息
   const sendMessage = useCallback(async (content: string) => {
@@ -376,8 +388,9 @@ export function useChat(options?: UseChatOptions) {
   // 清空对话
   const clearMessages = useCallback(() => {
     setState({ messages: [DEFAULT_WELCOME_MESSAGE], isLoading: false, error: null })
-    localStorage.removeItem(STORAGE_KEY)
-  }, [])
+    const storageKey = getStorageKey()
+    localStorage.removeItem(storageKey)
+  }, [getStorageKey])
 
   return {
     messages: state.messages,

@@ -24,6 +24,13 @@ export function LoginModalAntd({ open, onClose }: LoginModalAntdProps) {
     }
   }, [countdown])
 
+  // 当弹窗关闭时重置倒计时
+  useEffect(() => {
+    if (!open) {
+      setCountdown(0)
+    }
+  }, [open])
+
   // 发送验证码
   const handleSendCode = async () => {
     try {

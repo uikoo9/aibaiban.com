@@ -37,6 +37,14 @@ function BoardContent({ themeMenuItems, handleThemeChange, currentTheme }: Board
   const whiteboardRef = useRef<WhiteboardHandle>(null)
   const { token: themeToken } = theme.useToken() // ✅ 在 ConfigProvider 内部调用
 
+  // 处理退出登录
+  const handleLogout = () => {
+    // 清空白板
+    whiteboardRef.current?.clearWhiteboard()
+    // 执行退出登录
+    logout()
+  }
+
   // 聊天面板宽度状态
   const [chatWidth, setChatWidth] = useState(() => {
     const saved = localStorage.getItem(CHAT_WIDTH_STORAGE_KEY)
@@ -147,7 +155,7 @@ function BoardContent({ themeMenuItems, handleThemeChange, currentTheme }: Board
               menu={{
                 items: userMenuItems,
                 onClick: ({ key }) => {
-                  if (key === 'logout') logout()
+                  if (key === 'logout') handleLogout()
                 },
               }}
               placement="bottomRight"
@@ -220,7 +228,7 @@ function BoardContent({ themeMenuItems, handleThemeChange, currentTheme }: Board
               </div>
             }
           >
-            <Whiteboard ref={whiteboardRef} />
+            <Whiteboard ref={whiteboardRef} userId={user?.id} />
           </Suspense>
         </div>
 
