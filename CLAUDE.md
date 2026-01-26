@@ -4,26 +4,14 @@
 
 ## 快速导航
 
-### ⭐ Ant Design 版本（默认，推荐）
-**当前默认版本 - 企业级 UI 体验**：
-- **访问路由**: `/` (默认入口)
-- **主要文档**:
-  - [新版本说明](./antd/README-NEW-VERSION.md) ⭐ 完整功能介绍和优化记录
-  - [Ant Design 架构分析](./antd/ant-design-architecture-analysis.md) - 深度技术分析
-  - [Ant Design X 组件指南](./antd/antd-x-guide.md) - AI 组件完整指南
-  - [迁移可行性分析](./antd/migration-analysis.md) - 技术选型依据
+### 重要：Ant Design 版本说明
+**当前版本**：项目已全面迁移到 Ant Design + Ant Design X，提供企业级 UI 组件和 AI 场景专用组件。
 
-### 📦 DaisyUI 版本（备份）
-**原版本 - 保留为备份**：
-- **访问路由**: `/legacy`
-- **主要文档**:
-  - [UI/UX 设计指南](./docs/ui-ux-design-guide.md) - 核心设计原则、色彩系统、间距规范
-  - [DaisyUI 组件文档](./docs/daisyui.md) - 组件用法和最佳实践
-  - [开发流程规范](./.claude/context/development-workflow.md) - UI 开发检查清单
-
-### 重要：在开发 UI 组件时
-- **新功能开发**: 推荐使用 Ant Design 版本
-- **原版本维护**: 参考 DaisyUI 设计规范文档
+**核心文档（按顺序阅读）**：
+1. [Ant Design 官方文档](https://ant.design/) - 组件库完整文档
+2. [Ant Design X 官方文档](https://x.ant.design/) - AI 组件库文档
+3. [Ant Design 版本说明](./antd/README-NEW-VERSION.md) - 项目迁移记录和技术细节
+4. [开发流程规范](./.claude/context/development-workflow.md) - 开发检查清单
 
 ---
 
@@ -36,9 +24,7 @@
 
 ### 技术栈
 - **前端框架**: React 19.2.3 + TypeScript 5.9.3 + Vite 7.3.1
-- **样式系统**:
-  - 原版本: Tailwind CSS v4 + DaisyUI 5
-  - 新版本 (推���): Ant Design 5.22.5 + Ant Design X 1.1.1
+- **样式系统**: Tailwind CSS v4 + Ant Design 6.2.1 + Ant Design X 2.1.3
 - **白板框架**: Excalidraw 0.18.0
 - **构建工具**: npm 10.28.0
 - **路由**: React Router 7.12.0
@@ -49,136 +35,67 @@
 - [架构设计](./.claude/context/architecture.md)
 - [产品需求](./prds/README.md)
 - [Excalidraw 绘图指南](./docs/excalidraw-drawing-guide.md) ⭐ 必读：白板绘图核心机制
+- [Ant Design 版本说明](./antd/README-NEW-VERSION.md) ⭐ 必读：组件使用和技术细节
 
 ---
 
 ## UI 开发规范 (重要)
 
 ### 开发新组件时的必读顺序
-1. ✅ [设计规范](./docs/ui-ux-design-guide.md) - 了解设计原则
-2. ✅ [DaisyUI 文档](./docs/daisyui.md) - 查看组件用法
-3. ✅ [开发流程](./.claude/context/development-workflow.md) - 遵循检查清单
+1. ✅ [Ant Design 官方文档](https://ant.design/) - 查看组件用法和 API
+2. ✅ [Ant Design X 官方文档](https://x.ant.design/) - AI 组件（如有需要）
+3. ✅ [Ant Design 版本说明](./antd/README-NEW-VERSION.md) - 查看项目已用组件和最佳实践
+4. ✅ [开发流程](./.claude/context/development-workflow.md) - 遵循检查清单
 
-### 设计原则速查
+### Ant Design 组件速查
 
-#### 间距系统（8px 网格）
-- **内边距**: 8px (p-2), 16px (p-4), 20px (p-5), 24px (p-6), 32px (p-8), 40px (p-10)
-- **字段间距**: 16px (space-y-4), 20px (space-y-5), 24px (space-y-6)
-- **圆角**: 8px (rounded-lg), 16px (rounded-2xl)
+#### 常用基础组件
+| 组件 | 用途 | 项目中的使用 |
+|------|------|------------|
+| `ConfigProvider` | 全局配置（主题、语言） | BoardAntd - 主题切换 |
+| `Modal` | 对话框 | LoginModalAntd - 登录弹窗 |
+| `Form` | 表单管理 | LoginModalAntd - 表单验证 |
+| `Input` | 输入框 | LoginModalAntd - 手机号/验证码 |
+| `Button` | 按钮 | 所有组件 |
+| `Dropdown` | 下拉菜单 | BoardAntd - 用户菜单、主题切换 |
+| `Avatar` | 头像 | BoardAntd、ChatPanelAntd |
+| `Alert` | 警告提示 | LoginModalAntd - 错误提示 |
+| `Spin` | 加载指示器 | BoardAntd - 白板加载 |
 
-#### 字号系统
-| 元素 | Tailwind Class | 尺寸 | 使用场景 |
-|------|---------------|------|---------|
-| 标题 | `text-2xl` | 24px | 对话框标题 |
-| 标签 | `text-[15px]` | 15px | 表单标签（自定义） |
-| 输入/按钮 | `text-base` | 16px | 输入框、按钮文字 |
-| 副标题 | `text-sm` | 14px | 辅助说明文字 |
-| 提示 | `text-xs` | 12px | 错误提示、标签小文字 |
+#### Ant Design X AI 组件
+| 组件 | 用途 | 项目中的使用 |
+|------|------|------------|
+| `XProvider` | 全局 AI 组件配置 | BoardAntd |
+| `Bubble.List` | 消息列表 | ChatPanelAntd - 聊天消息展示 |
+| `Sender` | AI 输入框 | ChatPanelAntd - 用户输入 |
 
-#### 色彩系统
-```css
-/* Primary Colors */
---primary: #2563EB       /* Trust Blue - 主要 CTA、图标 */
---success: #22C55E       /* Green - 成功状态 */
---error: #EF4444         /* Red - 错误状态 */
---warning: #F59E0B       /* Amber - 警告 */
+### 主题配置
 
-/* Background & Text */
---background: #F8FAFC    /* Off-white - 背景 */
---text: #1E293B          /* Dark Grey - 文本 */
---border: #E2E8F0        /* Light Grey - 边框 */
-```
+项目使用 ConfigProvider 管理主题：
 
-#### 组件尺寸规范
-| 组件 | DaisyUI Class | 高度 | 说明 |
-|------|--------------|------|------|
-| 大输入框 | `input-lg` | 48px | 移动端友好的触摸目标 |
-| 大按钮 | `btn-lg` | 48px | 与输入框保持一致 |
-| 触摸目标 | - | ≥44px | WCAG 标准（推荐 48px） |
-| 图标容器 | `w-16 h-16` | 64px | 视觉焦点，传达品质感 |
-
-#### 透明度层次
-- **100%**: 主要内容
-- **60%**: 副标题、辅助文字 (`text-base-content/60`)
-- **20%**: 按钮阴影 (`shadow-primary/20`)
-- **10%**: 图标背景 (`bg-primary/10`)
-- **5%**: 渐变装饰 (`from-primary/5`)
-
-### 常用 DaisyUI 组件
-
-#### Modal（弹窗）
 ```tsx
-// ✅ 使用 HTML5 <dialog> 元素
-<dialog ref={dialogRef} className="modal">
-  <div className="modal-box max-w-md p-0">
-    {/* 头部区域 */}
-    <div className="bg-gradient-to-b from-primary/5 to-transparent px-8 pt-10 pb-8">
-      <div className="text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
-          {/* 图标 SVG */}
-        </div>
-        <h2 className="text-2xl font-bold text-base-content mb-2">标题</h2>
-        <p className="text-sm text-base-content/60">副标题</p>
-      </div>
-    </div>
-
-    {/* 内容区域 */}
-    <div className="px-8 py-6">
-      {/* 表单内容 */}
-    </div>
-  </div>
-
-  {/* 点击背景关闭 */}
-  <form method="dialog" className="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
-```
-
-#### Form Control（表单控件）
-```tsx
-<div className="form-control">
-  <label className="label pb-2">
-    <span className="label-text text-[15px] font-semibold">标签</span>
-    <span className="label-text-alt text-error text-xs">必填</span>
-  </label>
-  <input
-    className="input input-bordered input-lg w-full text-base"
-    placeholder="占位符"
-  />
-</div>
-```
-
-#### Join（组合元素 - 验证码场景）
-```tsx
-<div className="join w-full">
-  <input className="input input-bordered input-lg join-item flex-1" />
-  <button className="btn btn-neutral btn-lg join-item">发送验证码</button>
-</div>
-```
-
-#### Button（主按钮）
-```tsx
-<button className="btn btn-primary btn-lg w-full text-base font-semibold shadow-lg shadow-primary/20">
-  立即登录
-</button>
-```
-
-#### Alert（警告提示）
-```tsx
-<div role="alert" className="alert alert-error">
-  <svg className="w-5 h-5">{/* 图标 */}</svg>
-  <span>错误信息</span>
-</div>
+<ConfigProvider
+  locale={zhCN}
+  theme={{
+    algorithm: currentTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
+    token: {
+      colorPrimary: '#1677ff',  // 主色调
+      borderRadius: 8,          // 圆角
+      fontSize: 14,             // 字号
+    },
+  }}
+>
+  <XProvider>
+    {/* 应用内容 */}
+  </XProvider>
+</ConfigProvider>
 ```
 
 ### 可访问性要点
-- ✅ 颜色对比度最小 4.5:1（WCAG AA 标准）
-- ✅ 触摸目标最小 44x44px（推荐 48px）
-- ✅ 所有输入框都有可见标签（不要仅用 placeholder）
+- ✅ 所有交互元素都有明确的 aria-label
+- ✅ 键盘导航支持（Tab 顺序合理）
+- ✅ 焦点状态清晰可见
 - ✅ 错误消息添加 `role="alert"`
-- ✅ 焦点状态清晰可见（`focus:ring-2`）
-- ✅ 支持键盘导航（Tab 顺序匹配视觉顺序）
 
 ---
 
@@ -190,19 +107,18 @@
   │   ├── project-overview.md # 项目概述
   │   ├── tech-stack.md       # 技术栈详情
   │   ├── architecture.md     # 架构设计
-  │   └── development-workflow.md # 开发流程和规范 ⭐
+  │   └── development-workflow.md # 开发流程和规范
   ├── decisions/              # 架构决策记录 (ADR)
   └── sessions/               # 开发会话记录
 
-antd/                          # Ant Design 新版本文档 🆕
-  ├── README-NEW-VERSION.md   # 新版本使用说明 ⭐
-  ├── ant-design-architecture-analysis.md  # Ant Design 架构分析
+antd/                          # Ant Design 版本相关文档
+  ├── README-NEW-VERSION.md   # 版本说明 ⭐ 必读
+  ├── ant-design-architecture-analysis.md # 架构分析
   ├── antd-x-guide.md         # Ant Design X 组件指南
   └── migration-analysis.md   # 迁移可行性分析
 
 docs/                          # 技术文档
-  ├── ui-ux-design-guide.md   # UI/UX 设计规范 ⭐ 必读
-  ├── daisyui.md              # DaisyUI 组件文档 ⭐ 必读
+  ├── excalidraw-drawing-guide.md ⭐ 必读：白板绘图核心机制
   ├── Excalidraw集成方案.md   # 白板集成方案
   ├── 前端渲染方案选型.md      # 技术选型文档
   └── ...其他技术文档
@@ -214,18 +130,11 @@ prds/                          # 产品需求文档
 
 src/                           # 前端应用源码
   ├── components/             # React 组件
-  │   ├── Auth/              # 认证组件
-  │   │   ├── LoginModal.tsx       # DaisyUI 登录弹窗（原版本）
-  │   │   └── LoginModalAntd.tsx   # Ant Design 登录弹窗 🆕
+  │   ├── Auth/              # 认证组件（登录模态框）
   │   ├── Chat/              # 聊天面板组件
-  │   │   ├── ChatPanel.tsx        # DaisyUI 聊天面板（原版本）
-  │   │   ├── ChatPanelAntd.tsx    # Ant Design X 聊天面板 🆕
-  │   │   └── MessageBubble.tsx    # 消息气泡
-  │   ├── Whiteboard.tsx     # 白板核心组件
-  │   └── ThemeSwitcher.tsx  # 主题切换器
+  │   └── Whiteboard.tsx     # 白板核心组件
   ├── pages/                  # 页面组件
-  │   ├── Board.tsx          # 白板主页面（原版本，路由: /）
-  │   └── BoardAntd.tsx      # 白板主页面 Ant Design 版 🆕（路由: /antd）
+  │   └── BoardAntd.tsx      # 白板主页面
   ├── hooks/                  # 自定义 Hooks
   │   ├── useAuth.tsx        # 认证状态管理
   │   └── useChat.ts         # 聊天功能
@@ -272,11 +181,10 @@ git log --oneline -5 # 查看最近 5 条提交记录
 ## 开发流程规范
 
 ### UI 组件开发流程
-1. ✅ **阅读设计规范**：查看 `docs/ui-ux-design-guide.md`
-2. ✅ **查看组件文档**：查看 `docs/daisyui.md` 中对应组件
-3. ✅ **参考成功案例**：查看 `.claude/context/development-workflow.md` 中的案例
-4. ✅ **编写代码**：遵循设计系统和可访问性规范
-5. ✅ **测试组件**：视觉检查 + 键盘导航 + 响应式
+1. ✅ **查看 Ant Design 文档**：https://ant.design/
+2. ✅ **参考项目现有代码**：查看 `antd/README-NEW-VERSION.md` 中的示例
+3. ✅ **编写代码**：遵循项目规范
+4. ✅ **测试组件**：视觉检查 + 键盘导航 + 响应式
 
 ### 文档同步规则
 **每次项目有实质性更新时，必须同步更新相关文档**。详见：[开发流程规范](./.claude/context/development-workflow.md#文档同步规则-重要)
@@ -353,117 +261,52 @@ export all_proxy=socks5://127.0.0.1:7890
 
 ## 快速参考卡片
 
-### 标准模态框头部（带图标装饰）
+### 标准 Ant Design Form 表单
 ```tsx
-<div className="bg-gradient-to-b from-primary/5 to-transparent px-8 pt-10 pb-8">
-  <div className="text-center">
-    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
-      {/* 图标 SVG - 使用 w-8 h-8 */}
-    </div>
-    <h2 className="text-2xl font-bold text-base-content mb-2">标题</h2>
-    <p className="text-sm text-base-content/60">副标题说明</p>
-  </div>
-</div>
+<Form
+  form={form}
+  onFinish={handleSubmit}
+  layout="vertical"
+>
+  <Form.Item
+    label="字段标签"
+    name="fieldName"
+    rules={[{ required: true, message: '请输入...' }]}
+  >
+    <Input placeholder="请输入..." />
+  </Form.Item>
+
+  <Form.Item>
+    <Button type="primary" htmlType="submit" block>
+      提交
+    </Button>
+  </Form.Item>
+</Form>
 ```
 
-### 标准表单字段
+### 标准 Ant Design X 聊天界面
 ```tsx
-<div className="form-control">
-  <label className="label pb-2">
-    <span className="label-text text-[15px] font-semibold">字段标签</span>
-    <span className="label-text-alt text-error text-xs">必填</span>
-  </label>
-  <input
-    className="input input-bordered input-lg w-full text-base"
-    placeholder="请输入..."
-  />
-</div>
+<Bubble.List
+  items={messages.map(msg => ({
+    key: msg.id,
+    role: msg.role,
+    content: msg.content,
+    variant: msg.role === 'user' ? 'filled' : 'outlined',
+    placement: msg.role === 'user' ? 'end' : 'start',
+    avatar: <Avatar icon={msg.role === 'user' ? <UserOutlined /> : <RobotOutlined />} />,
+  }))}
+/>
+
+<Sender
+  value={inputValue}
+  onChange={setInputValue}
+  onSubmit={handleSend}
+  placeholder="输入你的需求..."
+/>
 ```
-
-### 标准主按钮
-```tsx
-<button className="btn btn-primary btn-lg w-full text-base font-semibold shadow-lg shadow-primary/20">
-  按钮文字
-</button>
-```
-
----
-
-## 🆕 Ant Design 新版本
-
-### 概述
-
-项目现已支持基于 **Ant Design + Ant Design X** 的企业级 UI 实现，提供更专业的 AI 聊天体验。
-
-### 访问方式
-
-```bash
-# 开发环境
-http://localhost:5173/antd
-
-# 原版本（DaisyUI）
-http://localhost:5173/
-```
-
-### 核心特性
-
-1. **企业级 AI 聊天**
-   - `Bubble.List`: 专业消息列表，支持流式渲染、打字效果
-   - `Sender`: 企业级输入框，自动大小调整
-   - `Welcome` + `Prompts`: 精美的欢迎页和快速提示
-
-2. **完整的表单体验**
-   - `Form` 组件: 自动验证、错误提示
-   - `Modal`: 企业级弹窗设计
-   - 更好的可访问性（WCAG 2.0 AA）
-
-3. **统一的设计语言**
-   - 基于 Ant Design 设计规范
-   - 一致的间距、圆角、颜色
-   - 完整的 TypeScript 支持
-
-### 组件对照
-
-| 功能 | 原版本（DaisyUI） | 新版本（Ant Design） |
-|------|------------------|---------------------|
-| 登录弹窗 | `LoginModal.tsx` | `LoginModalAntd.tsx` |
-| 聊天面板 | `ChatPanel.tsx` | `ChatPanelAntd.tsx` |
-| 主页面 | `Board.tsx` (路由: `/`) | `BoardAntd.tsx` (路由: `/antd`) |
-
-### 技术文档
-
-- [新版本说明](./antd/README-NEW-VERSION.md) - 使用指南和功能介绍
-- [Ant Design 架构分析](./antd/ant-design-architecture-analysis.md) - 深度技术分析
-- [Ant Design X 组件指南](./antd/antd-x-guide.md) - AI 组件完整指南
-- [迁移可行性分析](./antd/migration-analysis.md) - 为什么选择 antd + antd-x
-
-### 依赖信息
-
-```json
-{
-  "dependencies": {
-    "antd": "^5.22.5",
-    "@ant-design/x": "^1.1.1",
-    "@ant-design/icons": "^5.5.3"
-  }
-}
-```
-
-### 优势对比
-
-✅ **新版本优势**：
-- 更专业的 AI 聊天体验
-- 流式渲染、打字效果内置支持
-- 企业级代码质量和社区支持
-- 更好的可访问性和国际化
-
-⚠️ **注意事项**：
-- 包体积较大（~500KB gzipped）
-- 需要同时安装 antd 和 antd-x
-- antd-x 依赖 antd，不能单独使用
 
 ---
 
 **最后更新**: 2026-01-26
 **维护者**: Claude Code
-**版本**: 1.1.0
+**版本**: 2.0.0 (Ant Design 版本)

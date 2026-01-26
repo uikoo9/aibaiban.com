@@ -16,10 +16,6 @@
 - [白板素材库对比.md](./白板素材库对比.md) - Excalidraw vs tldraw 素材库
 - [Excalidraw集成方案.md](./Excalidraw集成方案.md) - Excalidraw 引入方案分析
 
-### UI/UX 设计
-- [ui-ux-design-guide.md](./ui-ux-design-guide.md) - UI/UX 设计规范和色彩系统
-- [daisyui.md](./daisyui.md) - DaisyUI 组件库使用指南
-
 ### 开发规范
 - [GIT_COMMIT_GUIDELINES.md](./GIT_COMMIT_GUIDELINES.md) - Git 提交信息规范
 

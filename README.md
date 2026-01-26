@@ -22,7 +22,8 @@ AI白板是一个基于人工智能的在线协作白板工具，致力于提供
 - **构建工具**: Vite 7.3.1 - 快速的开发服务器和构建工具
 - **白板框架**: Excalidraw 0.18.0 - 丰富素材库，手绘风格，MIT 协议
 - **前端框架**: React 19.2.3 + TypeScript 5.9.3
-- **样式方案**: Tailwind CSS v4 + DaisyUI 5 - 预设主题，开箱即用
+- **样式方案**: Tailwind CSS v4 + Ant Design 6.2.1 - 企业级 UI 组件库
+- **AI 组件**: Ant Design X 2.1.3 - AI 场景专用组件
 - **路由**: React Router 7.12.0
 - **后端**: Node.js - JavaScript 全栈开发（待实现）
 
@@ -67,15 +68,13 @@ aibaiban.com/
 │   ├── App.tsx                       # 根组件（路由配置）
 │   ├── index.css                     # 全局样式
 │   ├── pages/
-│   │   └── Board.tsx                 # 白板主页面
+│   │   └── BoardAntd.tsx              # 白板主页面（Ant Design 版本）
 │   ├── components/
 │   │   ├── Whiteboard.tsx            # Excalidraw 集成组件
-│   │   ├── ThemeSwitcher.tsx         # 主题切换组件
 │   │   ├── Auth/
-│   │   │   └── LoginModal.tsx        # 登录弹窗
+│   │   │   └── LoginModalAntd.tsx    # 登录弹窗（Ant Design）
 │   │   └── Chat/
-│   │       ├── ChatPanel.tsx         # AI 聊天面板
-│   │       └── MessageBubble.tsx     # 消息气泡组件
+│   │       └── ChatPanelAntd.tsx     # AI 聊天面板（Ant Design X）
 │   ├── hooks/
 │   │   ├── useChat.ts                # 聊天逻辑 Hook
 │   │   └── useAuth.tsx               # 认证逻辑 Hook（Context API）
@@ -113,8 +112,6 @@ aibaiban.com/
 │   ├── 开源白板项目选型.md           # 白板框架对比
 │   ├── 白板素材库对比.md             # 素材库深度对比
 │   ├── Excalidraw集成方案.md        # Excalidraw 引入方案
-│   ├── ui-ux-design-guide.md        # UI/UX 设计规范
-│   ├── daisyui.md                   # DaisyUI 组件文档
 │   └── GIT_COMMIT_GUIDELINES.md     # Git 提交规范
 ├── .gitignore                        # Git 忽略文件
 ├── .husky/                           # Git hooks
@@ -198,15 +195,15 @@ git commit -m "docs: 更新开发文档"
 - ✅ Lighthouse 审计优化（SEO、无障碍、性能）
 - ✅ 构建配置优化（环境区分、自动清理）
 - ✅ Excalidraw 白板集成（支持主题切换、本地存储）
-- ✅ DaisyUI 主题系统（32 个预设主题）
+- ✅ Ant Design 企业级 UI 组件库集成
+- ✅ Ant Design X AI 聊天组件集成（Bubble.List、Sender）
 - ✅ 手机号 + 验证码登录（真实 API 集成）
-- ✅ AI 聊天面板 UI（真实 API 集成）
+- ✅ AI 聊天面板 UI（真实 API 集成，流式输出）
 - ✅ AI 意图识别（绘图 vs 非绘图请求）
 - ✅ 流式对话体验（逐字显示，4 种随机拒绝话术）
 - ✅ 聊天加载状态优化（立即显示，自动聚焦）
 - ✅ 登录状态持久化
 - ✅ 消息历史本地存储
-- ✅ UI/UX 设计规范文档
 - ✅ Header 品牌展示（Logo + 域名）
 - ✅ 白板代码调用功能（forwardRef API）
 - ✅ AI 生成图表功能（SimplifiedDiagram DSL + 自动转换器）
@@ -215,8 +212,8 @@ git commit -m "docs: 更新开发文档"
 - ✅ Excalidraw 绘图指南文档（基于源码分析）
 - ✅ 智能箭头连接算法（自动选择最佳边）
 - ✅ 聊天面板可拖动调整宽度（280px-600px）
-- ✅ UI/UX Demo 页面（/demo 路由）
-- ✅ 移除测试按钮（代码清理）
+- ✅ 按用户ID隔离数据（白板和聊天记录）
+- ✅ 主题切换支持（浅色/深色模式）
 
 ## 路线图
 
@@ -225,15 +222,16 @@ git commit -m "docs: 更新开发文档"
 - [x] 确定包管理器 (pnpm)
 - [x] 确定白板框架 (Excalidraw)
 - [x] 确定前端渲染方案 (Vite + React)
-- [x] 确定 UI 框架 (Tailwind CSS + DaisyUI)
+- [x] 确定 UI 框架 (Tailwind CSS + Ant Design)
 - [x] 创建产品文档结构 (prds/)
 - [x] 搭建前端项目框架
 - [x] 集成 Excalidraw 白板
-- [x] 实现主题切换功能
+- [x] 实现主题切换功能（浅色/深色）
 - [x] 简化项目结构（移除 Monorepo）
 - [x] 设计项目 Logo 和品牌视觉
 - [x] 完善 PWA 资源和 SEO
 - [x] 优化构建配置和工作流
+- [x] 集成 Ant Design 和 Ant Design X
 - [ ] 确定后端框架
 
 ### 产品规划
@@ -245,7 +243,8 @@ git commit -m "docs: 更新开发文档"
 - [x] 实现第一个 AI 功能（AI 生成图表演示）
 - [x] 将 AI 生成图表功能与聊天集成
 - [x] 创建 Excalidraw 绘图指南文档
-- [x] 新增 UI/UX Demo 页面
+- [x] 实现按用户ID隔离数据
+- [x] 使用 Ant Design 重构 UI（替代 DaisyUI）
 - [ ] 设计核心用户流程
 - [ ] 细化功能 PRD
 
@@ -261,7 +260,8 @@ git commit -m "docs: 更新开发文档"
 - [x] 将 AI 生成图表功能与聊天集成
 - [x] 修复 Excalidraw 文字渲染问题
 - [x] 实现智能箭头连接算法
-- [x] 创建 UI/UX Demo 页面
+- [x] 实现按用户ID隔离数据（白板和聊天记录）
+- [x] 使用 Ant Design 重构 UI（替代 DaisyUI）
 - [ ] 实现实时协作
 
 ## 许可证
