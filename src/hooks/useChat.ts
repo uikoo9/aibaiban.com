@@ -273,7 +273,12 @@ export function useChat(options?: UseChatOptions) {
           // 调用 /draw 接口生成图表
           try {
             console.log('调用 /draw 接口，用户输入:', content.trim())
-            const drawResponse = await fetch('https://aibaiban.com/draw', {
+
+            // ⭐ 使用 Tool Calling 模式（新方案）
+            // 如果要切换回原来的方式，改为 '/draw'
+            const drawEndpoint = 'https://aibaiban.com/drawWithTools'
+
+            const drawResponse = await fetch(drawEndpoint, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

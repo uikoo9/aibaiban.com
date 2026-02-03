@@ -15,12 +15,24 @@ export interface DiagramNode {
   height?: number
 }
 
+/**
+ * 连线路由配置（用于精确控制连线走向，避免重叠）
+ */
+export interface ConnectionRouting {
+  exitSide?: 'top' | 'right' | 'bottom' | 'left'  // 连线从起始节点的哪个边出发
+  exitRatio?: number  // 出口在该边的位置比例 (0.0-1.0)，如 0.3 表示该边的 30% 位置
+  entrySide?: 'top' | 'right' | 'bottom' | 'left'  // 连线进入目标节点的哪个边
+  entryRatio?: number  // 入口在该边的位置比例 (0.0-1.0)，如 0.7 表示该边的 70% 位置
+  waypoints?: Array<{ x: number; y: number }>  // 中间路径点（用于复杂路由）
+}
+
 export interface DiagramConnection {
   from: string
   to: string
   label?: string
   type?: 'arrow' | 'line'  // arrow: 带箭头, line: 直线
   style?: 'solid' | 'dashed' | 'dotted'  // 线条样式
+  routing?: ConnectionRouting  // ⭐ 新增：路由配置（防止连线重叠的关键）
 }
 
 /**

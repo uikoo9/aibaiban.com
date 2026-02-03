@@ -1,4 +1,4 @@
-import type { SimplifiedDiagram } from '@/types/diagram'
+import type { SimplifiedDiagram, ConnectionRouting } from '@/types/diagram'
 
 /**
  * 颜色映射
@@ -10,6 +10,9 @@ const COLOR_MAP = {
   orange: '#f76707',
   red: '#e03131',
   gray: '#495057',
+  yellow: '#ffd43b',
+  pink: '#e64980',
+  black: '#000000',
 }
 
 /**
@@ -58,20 +61,79 @@ function createBaseElement() {
 }
 
 /**
- * 计算两个节点之间的最佳连接点
- * 根据节点的相对位置，选择最合适的连接边（上下左右）
+ * 根据边和比例计算节点边缘上的坐标点
+ * @param node 节点信息（x, y, width, height）
+ * @param side 边（top/right/bottom/left）
+ * @param ratio 位置比例（0.0-1.0），默认 0.5（中点）
+ */
+function getPointOnSide(
+  node: { x: number; y: number; width: number; height: number },
+  side: 'top' | 'right' | 'bottom' | 'left',
+  ratio: number = 0.5
+): { x: number; y: number } {
+  // 确保 ratio 在 0-1 范围内
+  ratio = Math.max(0, Math.min(1, ratio))
+
+  switch (side) {
+    case 'top':
+      return {
+        x: node.x + node.width * ratio,
+        y: node.y,
+      }
+    case 'right':
+      return {
+        x: node.x + node.width,
+        y: node.y + node.height * ratio,
+      }
+    case 'bottom':
+      return {
+        x: node.x + node.width * ratio,
+        y: node.y + node.height,
+      }
+    case 'left':
+      return {
+        x: node.x,
+        y: node.y + node.height * ratio,
+      }
+  }
+}
+
+/**
+ * ⭐ 改进版：根据 routing 配置计算连接点
+ * 如果提供了 routing，使用精确的 exitSide/entrySide 和 ratio
+ * 否则使用自动算法（根据节点相对位置）
  */
 function calculateConnectionPoints(
   fromNode: { x: number; y: number; width: number; height: number },
-  toNode: { x: number; y: number; width: number; height: number }
+  toNode: { x: number; y: number; width: number; height: number },
+  routing?: ConnectionRouting
 ): { startX: number; startY: number; endX: number; endY: number } {
-  // 计算两个节点的中心点
+  // 如果提供了 routing 配置，使用精确路由
+  if (routing?.exitSide && routing?.entrySide) {
+    const exitRatio = routing.exitRatio ?? 0.5  // 默认中点
+    const entryRatio = routing.entryRatio ?? 0.5
+
+    const startPoint = getPointOnSide(fromNode, routing.exitSide, exitRatio)
+    const endPoint = getPointOnSide(toNode, routing.entrySide, entryRatio)
+
+    console.log(
+      `[Routing] Using custom routing: ${routing.exitSide}(${exitRatio}) → ${routing.entrySide}(${entryRatio})`
+    )
+
+    return {
+      startX: startPoint.x,
+      startY: startPoint.y,
+      endX: endPoint.x,
+      endY: endPoint.y,
+    }
+  }
+
+  // 否则使用自动算法（保留原有逻辑）
   const fromCenterX = fromNode.x + fromNode.width / 2
   const fromCenterY = fromNode.y + fromNode.height / 2
   const toCenterX = toNode.x + toNode.width / 2
   const toCenterY = toNode.y + toNode.height / 2
 
-  // 计算中心点之间的水平和垂直距离
   const dx = toCenterX - fromCenterX
   const dy = toCenterY - fromCenterY
 
@@ -246,7 +308,7 @@ export function convertDiagramToExcalidraw(diagram: SimplifiedDiagram): any[] {
     elements.push(textElement)
   })
 
-  // 2. 创建连接线
+  // 2. 创建连接线（⭐ 改进：支持 routing）
   diagram.connections.forEach((conn) => {
     const fromNode = nodePositions[conn.from]
     const toNode = nodePositions[conn.to]
@@ -256,27 +318,48 @@ export function convertDiagramToExcalidraw(diagram: SimplifiedDiagram): any[] {
       return
     }
 
-    // 智能计算最佳连接点
-    const { startX, startY, endX, endY } = calculateConnectionPoints(fromNode, toNode)
+    // ⭐ 使用 routing 配置计算连接点
+    const { startX, startY, endX, endY } = calculateConnectionPoints(fromNode, toNode, conn.routing)
+
+    // 处理 waypoints（中间路径点）
+    let points: number[][]
+    if (conn.routing?.waypoints && conn.routing.waypoints.length > 0) {
+      // 有中间路径点：[起点, 路径点1, 路径点2, ..., 终点]
+      points = [
+        [0, 0],  // 起点（相对于 startX, startY）
+        ...conn.routing.waypoints.map(wp => [wp.x - startX, wp.y - startY]),
+        [endX - startX, endY - startY],  // 终点（相对坐标）
+      ]
+      console.log(`[Routing] Using ${conn.routing.waypoints.length} waypoints`)
+    } else {
+      // 无中间路径点：直线连接
+      points = [
+        [0, 0],
+        [endX - startX, endY - startY],
+      ]
+    }
+
+    // 处理连线样式
+    const strokeStyle = conn.style === 'dashed' ? 'dashed'
+                      : conn.style === 'dotted' ? 'dotted'
+                      : 'solid'
 
     const arrowElement = {
       id: generateId(),
-      type: 'arrow',
+      type: conn.type === 'line' ? 'line' : 'arrow',  // 支持 line 类型（无箭头）
       x: startX,
       y: startY,
       width: endX - startX,
       height: endY - startY,
-      points: [
-        [0, 0],
-        [endX - startX, endY - startY],
-      ],
+      points,
       strokeColor: '#000000',
       backgroundColor: 'transparent',
       fillStyle: 'solid' as const,
+      strokeStyle: strokeStyle as 'solid' | 'dashed' | 'dotted',  // ⭐ 支持虚线/点线
       startBinding: null,
       endBinding: null,
       startArrowhead: null,
-      endArrowhead: 'arrow' as const,
+      endArrowhead: conn.type === 'line' ? null : 'arrow' as const,  // line 类型无箭头
       ...createBaseElement(),
     }
 
@@ -284,16 +367,25 @@ export function convertDiagramToExcalidraw(diagram: SimplifiedDiagram): any[] {
 
     // 如果有标签，添加文字
     if (conn.label) {
-      const midX = startX + (endX - startX) / 2
-      const midY = startY + (endY - startY) / 2
+      // 标签放在中点（如果有 waypoints，放在第一个路径点附近）
+      let labelX: number, labelY: number
+      if (conn.routing?.waypoints && conn.routing.waypoints.length > 0) {
+        const midWaypoint = conn.routing.waypoints[Math.floor(conn.routing.waypoints.length / 2)]
+        labelX = midWaypoint.x
+        labelY = midWaypoint.y
+      } else {
+        labelX = startX + (endX - startX) / 2
+        labelY = startY + (endY - startY) / 2
+      }
+
       const labelFontSize = 12
       const labelLineHeight = 1.25
 
       const labelElement = {
         id: generateId(),
         type: 'text',
-        x: midX - 30,
-        y: midY - labelFontSize * labelLineHeight / 2,
+        x: labelX - 30,
+        y: labelY - labelFontSize * labelLineHeight / 2,
         width: 60,
         height: labelFontSize * labelLineHeight,
         text: conn.label,
