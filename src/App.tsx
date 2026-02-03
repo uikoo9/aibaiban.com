@@ -8,8 +8,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<BoardAntd />} />
-          <Route path="/board" element={<BoardAntd />} />
-          {/* 兼容旧路由 */}
+          {/* 其他路由重定向到首页 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

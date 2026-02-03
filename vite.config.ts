@@ -43,11 +43,8 @@ export default defineConfig(({ command, mode }) => ({
 
     // 代码分割配置
     rollupOptions: {
-      // 多页面应用配置
-      input: {
-        main: path.resolve(__dirname, 'index.html'),    // 静态 landing 页面
-        board: path.resolve(__dirname, 'board.html'),   // React SPA
-      },
+      // 单页面应用配置
+      input: path.resolve(__dirname, 'index.html'),
 
       output: {
         // 手动分割 chunks
