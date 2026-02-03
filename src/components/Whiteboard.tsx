@@ -23,6 +23,118 @@ const DARK_THEMES = [
 
 const STORAGE_KEY_PREFIX = 'excalidraw-data'
 
+/**
+ * 元素分组类型
+ */
+interface ElementGroup {
+  type: 'node' | 'connection'  // 节点（形状+文字）或连线（箭头+标签）
+  y: number  // 用于排序的 y 坐标
+  x: number  // 用于排序的 x 坐标
+  elements: any[]  // 该组包含的所有元素
+}
+
+/**
+ * 将元素分组并按位置排序（从上到下，从左到右）
+ * - 节点：形状 + 其绑定的文字作为一组
+ * - 连线：箭头/线 + 其关联的标签文字作为一组
+ */
+function groupAndSortElements(elements: any[]): ElementGroup[] {
+  const groups: ElementGroup[] = []
+  const processedIds = new Set<string>()
+
+  // 第1步：识别节点组（形状 + 绑定的文字）
+  elements.forEach((element) => {
+    if (processedIds.has(element.id)) return
+
+    // 如果是形状元素（rectangle, ellipse, diamond）
+    if (['rectangle', 'ellipse', 'diamond'].includes(element.type)) {
+      const groupElements = [element]
+      processedIds.add(element.id)
+
+      // 查找绑定到该形状的文字
+      if (element.boundElements) {
+        element.boundElements.forEach((bound: any) => {
+          if (bound.type === 'text') {
+            const textElement = elements.find((el) => el.id === bound.id)
+            if (textElement) {
+              groupElements.push(textElement)
+              processedIds.add(textElement.id)
+            }
+          }
+        })
+      }
+
+      groups.push({
+        type: 'node',
+        y: element.y,
+        x: element.x,
+        elements: groupElements,
+      })
+    }
+  })
+
+  // 第2步：识别连线组（箭头/线 + 标签文字）
+  elements.forEach((element) => {
+    if (processedIds.has(element.id)) return
+
+    // 如果是连线元素（arrow, line）
+    if (['arrow', 'line'].includes(element.type)) {
+      const groupElements = [element]
+      processedIds.add(element.id)
+
+      // 查找紧邻的文字标签（独立文字，containerId 为 null）
+      // 标签通常在连线附近，通过位置判断
+      const labelCandidates = elements.filter(
+        (el) =>
+          !processedIds.has(el.id) &&
+          el.type === 'text' &&
+          el.containerId === null &&
+          Math.abs(el.x - element.x) < 200 &&
+          Math.abs(el.y - element.y) < 200
+      )
+
+      // 取最近的一个作为标签
+      if (labelCandidates.length > 0) {
+        const closestLabel = labelCandidates[0]
+        groupElements.push(closestLabel)
+        processedIds.add(closestLabel.id)
+      }
+
+      groups.push({
+        type: 'connection',
+        y: element.y,
+        x: element.x,
+        elements: groupElements,
+      })
+    }
+  })
+
+  // 第3步：处理剩余未分组的元素（独立文字等）
+  elements.forEach((element) => {
+    if (!processedIds.has(element.id)) {
+      groups.push({
+        type: element.type === 'text' ? 'node' : 'connection',
+        y: element.y,
+        x: element.x,
+        elements: [element],
+      })
+      processedIds.add(element.id)
+    }
+  })
+
+  // 第4步：排序（主要按 y 坐标，次要按 x 坐标）
+  groups.sort((a, b) => {
+    if (Math.abs(a.y - b.y) < 50) {
+      // y 坐标相近（同一行），按 x 坐标排序（从左到右）
+      return a.x - b.x
+    }
+    // 否则按 y 坐标排序（从上到下）
+    return a.y - b.y
+  })
+
+  return groups
+}
+
 // 暴露的方法接口
 export interface WhiteboardHandle {
   addRandomShape: () => void
@@ -114,29 +226,41 @@ export const Whiteboard = forwardRef<WhiteboardHandle, WhiteboardProps>(({ userI
           return acc
         }, {} as Record<string, number>))
 
-        // 获取现有元素
-        const existingElements = excalidrawAPI.current.getSceneElements()
+        // ⭐ 将元素分组（节点+文字，连线+标签）并按位置排序
+        const elementGroups = groupAndSortElements(newElements)
+        console.log(`✨ 开始渐进式渲染，共 ${elementGroups.length} 组元素`)
 
-        // 添加新元素到白板
-        excalidrawAPI.current.updateScene({
-          elements: [
-            ...existingElements,
-            ...newElements,
-          ],
-        })
+        // ⭐ 渐进式渲染：每 200ms 渲染一组
+        let currentIndex = 0
+        const renderInterval = setInterval(() => {
+          if (currentIndex >= elementGroups.length) {
+            clearInterval(renderInterval)
+            console.log('✅ 渐进式渲染完成')
 
-        console.log('✅ 图表已添加到白板')
-
-        // 可选：滚动到新内容（延迟执行，等待渲染完成）
-        setTimeout(() => {
-          if (excalidrawAPI.current) {
-            // 获取新元素的边界，滚动到可视区域
-            excalidrawAPI.current.scrollToContent(newElements, {
-              fitToViewport: false,
-              animate: true,
-            })
+            // 渲染完成后，滚动到新内容
+            setTimeout(() => {
+              if (excalidrawAPI.current) {
+                excalidrawAPI.current.scrollToContent(newElements, {
+                  fitToViewport: false,
+                  animate: true,
+                })
+              }
+            }, 100)
+            return
           }
-        }, 100)
+
+          // 添加当前组的元素
+          const currentGroup = elementGroups[currentIndex]
+          excalidrawAPI.current.updateScene({
+            elements: [
+              ...excalidrawAPI.current.getSceneElements(),
+              ...currentGroup.elements,
+            ],
+          })
+
+          console.log(`📦 渲染第 ${currentIndex + 1}/${elementGroups.length} 组 (${currentGroup.type})`)
+          currentIndex++
+        }, 200) // 每 200ms 渲染一组
       } catch (error) {
         console.error('Failed to add AI generated diagram:', error)
       }

@@ -355,12 +355,12 @@ export function convertDiagramToExcalidraw(diagram: SimplifiedDiagram): any[] {
       strokeColor: '#000000',
       backgroundColor: 'transparent',
       fillStyle: 'solid' as const,
-      strokeStyle: strokeStyle as 'solid' | 'dashed' | 'dotted',  // ⭐ 支持虚线/点线
       startBinding: null,
       endBinding: null,
       startArrowhead: null,
       endArrowhead: conn.type === 'line' ? null : 'arrow' as const,  // line 类型无箭头
       ...createBaseElement(),
+      strokeStyle: strokeStyle as 'solid' | 'dashed' | 'dotted',  // ⭐ 支持虚线/点线（必须放在 createBaseElement 之后覆盖默认值）
     }
 
     elements.push(arrowElement)
