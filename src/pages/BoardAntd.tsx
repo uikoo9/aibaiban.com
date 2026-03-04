@@ -12,6 +12,7 @@ import zhCN from 'antd/locale/zh_CN'
 import { ChatPanelAntd } from '@/components/Chat/ChatPanelAntd'
 import { LoginModalAntd } from '@/components/Auth/LoginModalAntd'
 import { useAuth } from '@/hooks/useAuth'
+import { Footer } from '@/components/Footer'
 import type { WhiteboardHandle } from '@/components/Whiteboard'
 import type { SimplifiedDiagram } from '@/types/diagram'
 
@@ -105,7 +106,7 @@ function BoardContent({ themeMenuItems, handleThemeChange, currentTheme }: Board
   ]
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* 顶部导航栏 */}
       <header
         style={{
@@ -210,7 +211,7 @@ function BoardContent({ themeMenuItems, handleThemeChange, currentTheme }: Board
       </header>
 
       {/* 主内容区域 */}
-      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+      <div style={{ height: 'calc(100vh - 64px)', display: 'flex', minHeight: 0 }}>
         {/* 白板区域 */}
         <div style={{ flex: 1, background: themeToken.colorBgLayout, position: 'relative' }}>
           <Suspense
@@ -280,6 +281,9 @@ function BoardContent({ themeMenuItems, handleThemeChange, currentTheme }: Board
 
       {/* 登录弹窗 */}
       <LoginModalAntd open={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
